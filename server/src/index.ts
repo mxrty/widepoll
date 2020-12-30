@@ -1,16 +1,14 @@
-const express = require("express");
-const app = express();
-const cors = require("cors");
-const pool = require("./db");
+import express from "express";
+import pool from "./db";
+
+const app: express.Application = express();
 
 //middleware
-app.use(cors());
 app.use(express.json()); //req.body
 
 //ROUTES//
 
 //create a post
-
 app.post("/posts", async (req, res) => {
   try {
     const { title, body } = req.body;
@@ -26,7 +24,6 @@ app.post("/posts", async (req, res) => {
 });
 
 //get all posts
-
 app.get("/posts", async (req, res) => {
   try {
     const allPosts = await pool.query("SELECT * FROM posts");
@@ -37,7 +34,6 @@ app.get("/posts", async (req, res) => {
 });
 
 //get a post
-
 app.get("/posts/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -52,7 +48,6 @@ app.get("/posts/:id", async (req, res) => {
 });
 
 //update a post
-
 app.put("/posts/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -69,7 +64,6 @@ app.put("/posts/:id", async (req, res) => {
 });
 
 //delete a post
-
 app.delete("/posts/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -83,7 +77,6 @@ app.delete("/posts/:id", async (req, res) => {
   }
 });
 
-const port = 5000;
-app.listen(port, () => {
-  console.log("server has started on port " + port);
+app.listen(5000, () => {
+  console.log("server has started on port 5000");
 });
