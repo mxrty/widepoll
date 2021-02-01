@@ -27,6 +27,7 @@ class PostFeed extends React.Component {
 
   constructor(props) {
     super(props);
+    // TODO: store sort in redux so it is global
     this.state = { sort: "Trending" };
   }
 

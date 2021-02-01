@@ -21,7 +21,7 @@ class PostShow extends React.Component {
       <div>
         <h1>{this.props.post.title}</h1>
         {this.renderPostBody()}
-        <Comments postId={this.props.post.id} />
+        <Comments postId={this.props.post.post_id} />
       </div>
     );
   }

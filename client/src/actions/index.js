@@ -6,30 +6,52 @@ import {
   FETCH_POSTS,
   EDIT_POST,
   DELETE_POST,
+  CREATE_DOMAIN,
+  FETCH_DOMAIN,
+  EDIT_DOMAIN,
+  DELETE_DOMAIN,
+  SIGN_IN,
+  SIGN_OUT,
+  REGISTER,
 } from "./types";
 
-export const createPost = (formValues) => async (dispatch, getState) => {
-  // Do server side
-  // var currentDate = new Date();
-  // var dateString =
-  //   currentDate.getUTCFullYear() +
-  //   "/" +
-  //   ("0" + (currentDate.getUTCMonth() + 1)).slice(-2) +
-  //   "/" +
-  //   ("0" + currentDate.getUTCDate()).slice(-2) +
-  //   " " +
-  //   ("0" + currentDate.getUTCHours()).slice(-2) +
-  //   ":" +
-  //   ("0" + currentDate.getUTCMinutes()).slice(-2) +
-  //   ":" +
-  //   ("0" + currentDate.getUTCSeconds()).slice(-2);
-
-  //const { userId } = getState().auth;
-  const response = await api.post("/posts", {
+export const signIn = (formValues) => async (dispatch) => {
+  const response = await api.post("/auth/login", {
     ...formValues,
-    //createdAt: dateString,
-    //, userId
   });
+  dispatch({ type: SIGN_IN, payload: response.data });
+  history.push("/");
+};
+
+export const register = (formValues) => async (dispatch) => {
+  console.log(formValues);
+  const response = await api.post("/auth/register", {
+    ...formValues,
+  });
+  dispatch({ type: REGISTER, payload: response.data });
+  history.push("/");
+};
+
+export const signOut = () => {
+  return {
+    type: SIGN_OUT,
+  };
+};
+
+export const createPost = (formValues) => async (dispatch, getState) => {
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.post(
+    "/posts",
+    {
+      ...formValues,
+      user_id,
+    },
+    {
+      header: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
   dispatch({ type: CREATE_POST, payload: response.data });
   history.goBack();
 };
@@ -52,4 +74,27 @@ export const editPost = (id, formValues) => async (dispatch) => {
 export const deletePost = (id) => async (dispatch) => {
   await api.delete(`/posts/${id}`);
   dispatch({ type: DELETE_POST, payload: id });
+};
+
+export const createDomain = (formValues) => async (dispatch, getState) => {
+  const response = await api.post("/domains", {
+    ...formValues,
+  });
+  dispatch({ type: CREATE_DOMAIN, payload: response.data });
+  history.goBack();
+};
+
+export const fetchDomain = (domain) => async (dispatch) => {
+  const response = await api.get(`/domains/${domain}`);
+  dispatch({ type: FETCH_DOMAIN, payload: response.data });
+};
+
+export const editDomain = (domain, formValues) => async (dispatch) => {
+  const response = await api.put(`/domains/${domain}`, formValues);
+  dispatch({ type: EDIT_DOMAIN, payload: response.data });
+};
+
+export const deleteDomain = (domain) => async (dispatch) => {
+  await api.delete(`/domains/${domain}`);
+  dispatch({ type: DELETE_DOMAIN, payload: domain });
 };

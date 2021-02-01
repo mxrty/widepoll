@@ -1,20 +1,19 @@
 import express from "express";
-import pool from "./db";
+import pool from "../src/db";
 
-const app: express.Application = express();
+import authorise from "../middleware/authorise";
 
-//middleware
-app.use(express.json()); //req.body
+const router: express.Router = express.Router();
 
-//ROUTES//
+//POSTS
 
 //create a post
-app.post("/posts", async (req, res) => {
+router.post("/", authorise, async (req, res) => {
   try {
-    const { title, body } = req.body;
+    const { title, body, domain, postType, user_id } = req.body;
     const newPost = await pool.query(
-      "INSERT INTO posts (title, body) VALUES($1, $2) RETURNING *",
-      [title, body]
+      "INSERT INTO posts (title, post_body, domain, post_type, author, created_at) VALUES($1, $2, $3, $4, $5, current_timestamp) RETURNING *",
+      [title, body, domain, postType, user_id]
     );
 
     res.json(newPost.rows[0]);
@@ -24,7 +23,7 @@ app.post("/posts", async (req, res) => {
 });
 
 //get all posts
-app.get("/posts", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const allPosts = await pool.query("SELECT * FROM posts");
     res.json(allPosts.rows);
@@ -34,7 +33,7 @@ app.get("/posts", async (req, res) => {
 });
 
 //get a post
-app.get("/posts/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const post = await pool.query("SELECT * FROM posts WHERE post_id = $1", [
@@ -48,12 +47,12 @@ app.get("/posts/:id", async (req, res) => {
 });
 
 //update a post
-app.put("/posts/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { title, body } = req.body;
     const updatePost = await pool.query(
-      "UPDATE posts SET title = $1, body = $2 WHERE post_id = $3",
+      "UPDATE posts SET title = $1, post_body = $2 WHERE post_id = $3",
       [title, body, id]
     );
 
@@ -64,7 +63,7 @@ app.put("/posts/:id", async (req, res) => {
 });
 
 //delete a post
-app.delete("/posts/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const deletePost = await pool.query(
@@ -77,6 +76,4 @@ app.delete("/posts/:id", async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log("server has started on port 5000");
-});
+export default router;

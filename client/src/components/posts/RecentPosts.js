@@ -22,7 +22,7 @@ class RecentPosts extends React.Component {
         dataSource={this.props.posts}
         bordered
         renderItem={(post) => (
-          <Link to={`/d/${post.domain}/posts/${post.id}`}>
+          <Link to={`/d/${post.domain}/posts/${post.post_id}`}>
             <List.Item>
               <List.Item.Meta title={post.title} />
             </List.Item>

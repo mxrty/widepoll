@@ -9,6 +9,7 @@ import PostFeed from "./posts/PostFeed";
 import AdminPanel from "./AdminPanel";
 import Showcase from "./Showcase";
 import DomainCreate from "./domains/DomainCreate";
+import DomainEdit from "./domains/DomainEdit";
 import RecentPosts from "./posts/RecentPosts";
 import Login from "./accounts/Login";
 import Register from "./accounts/Register";
@@ -47,6 +48,7 @@ const App = () => {
                 <Route path="/register" exact component={Register} />
                 <Route path="/d/new" exact component={DomainCreate} />
                 <Route path="/d/:domain" exact component={PostFeed} />
+                <Route path="/d/:domain/edit" exact component={DomainEdit} />
                 <Route
                   path="/d/:domain/posts/new"
                   exact

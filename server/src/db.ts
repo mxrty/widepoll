@@ -5,7 +5,5 @@ export default new Pool({
   password: "admin",
   host: "localhost",
   port: 5432,
-  database: "widepoll_test",
+  database: "widepoll_dev",
 });
-
-//export default pool;
