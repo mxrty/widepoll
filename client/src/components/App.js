@@ -25,17 +25,34 @@ const App = () => {
             position: "fixed",
             zIndex: 9001,
             width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <Link to="/" style={{ color: "white" }}>
+          <Link
+            to="/"
+            style={{
+              color: "white",
+              display: "flex",
+              justifyContent: "flex-start",
+            }}
+          >
             Logo
           </Link>
-          <Link to="/login" style={{ color: "white" }}>
-            Login
-          </Link>
-          <Link to="/register" style={{ color: "white" }}>
-            Register
-          </Link>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Link to="/login" style={{ color: "white" }}>
+              Login
+            </Link>
+            <Link to="/register" style={{ color: "white" }}>
+              Register
+            </Link>
+          </div>
         </Header>
         <Content style={{ padding: "0 50px", marginTop: 64 }}>
           <Row>
