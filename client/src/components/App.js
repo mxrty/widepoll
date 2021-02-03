@@ -13,50 +13,22 @@ import DomainEdit from "./domains/DomainEdit";
 import RecentPosts from "./posts/RecentPosts";
 import Login from "./accounts/Login";
 import Register from "./accounts/Register";
+import Header from "./layout/Header";
+import Footer from "./layout/Footer";
 
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 
 const App = () => {
   return (
     <Router history={history}>
       <Layout>
-        <Header
-          style={{
-            position: "fixed",
-            zIndex: 9001,
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Link
-            to="/"
-            style={{
-              color: "white",
-              display: "flex",
-              justifyContent: "flex-start",
-            }}
-          >
-            Logo
-          </Link>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Link to="/login" style={{ color: "white" }}>
-              Login
-            </Link>
-            <Link to="/register" style={{ color: "white" }}>
-              Register
-            </Link>
-          </div>
-        </Header>
+        <Header />
         <Content style={{ padding: "0 50px", marginTop: 64 }}>
           <Row>
-            <Col span={18}>
+            <Col span={3} style={{ padding: "5px" }}>
+              <RecentPosts />
+            </Col>
+            <Col span={16} style={{ padding: "5px" }}>
               <Switch>
                 <Route path="/" exact component={PostFeed} />
                 <Route path="/admin" exact component={AdminPanel} />
@@ -78,14 +50,12 @@ const App = () => {
                 />
               </Switch>
             </Col>
-            <Col span={6}>
+            <Col span={5} style={{ padding: "5px" }}>
               <RecentPosts />
             </Col>
           </Row>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
-          widepoll ©2021 created by @mxrty
-        </Footer>
+        <Footer />
       </Layout>
     </Router>
   );
