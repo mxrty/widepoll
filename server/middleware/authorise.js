@@ -18,6 +18,7 @@ export default function (req, res, next) {
     req.user = verify.user;
     next();
   } catch (err) {
+    // TODO: Force relogin
     res.status(401).send("Token is not valid");
   }
 }

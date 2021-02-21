@@ -12,3 +12,6 @@ export const DELETE_DOMAIN = "DELETE_DOMAIN";
 export const SIGN_IN = "SIGN_IN";
 export const SIGN_OUT = "SIGN_OUT";
 export const REGISTER = "REGISTER";
+
+export const CREATE_COMMENT = "CREATE_COMMENT";
+export const FETCH_COMMENTS = "FETCH_COMMENTS";

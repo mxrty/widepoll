@@ -13,7 +13,36 @@ import {
   SIGN_IN,
   SIGN_OUT,
   REGISTER,
+  CREATE_COMMENT,
+  FETCH_COMMENTS,
 } from "./types";
+
+export const createComment = (formValues, postId) => async (
+  dispatch,
+  getState
+) => {
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.post(
+    `/comments/${postId}`,
+    {
+      ...formValues,
+      user_id,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
+
+  console.log(response);
+  dispatch({ type: CREATE_COMMENT, payload: response.data });
+};
+
+export const fetchComments = (postId) => async (dispatch) => {
+  const response = await api.get(`/comments/${postId}`);
+  dispatch({ type: FETCH_COMMENTS, payload: response.data });
+};
 
 export const signIn = (formValues) => async (dispatch) => {
   const response = await api.post("/auth/login", {
@@ -24,7 +53,6 @@ export const signIn = (formValues) => async (dispatch) => {
 };
 
 export const register = (formValues) => async (dispatch) => {
-  console.log(formValues);
   const response = await api.post("/auth/register", {
     ...formValues,
   });
@@ -47,11 +75,12 @@ export const createPost = (formValues) => async (dispatch, getState) => {
       user_id,
     },
     {
-      header: {
+      headers: {
         jwt_token: jwt_token,
       },
     }
   );
+
   dispatch({ type: CREATE_POST, payload: response.data });
   history.goBack();
 };
@@ -61,13 +90,30 @@ export const fetchPosts = () => async (dispatch) => {
   dispatch({ type: FETCH_POSTS, payload: response.data });
 };
 
+export const fetchLatestPosts = (number) => async (dispatch) => {
+  const response = await api.get(`/posts/latest/${number}`);
+  dispatch({ type: FETCH_POSTS, payload: response.data });
+};
+
 export const fetchPost = (id) => async (dispatch) => {
   const response = await api.get(`/posts/${id}`);
   dispatch({ type: FETCH_POST, payload: response.data });
 };
 
-export const editPost = (id, formValues) => async (dispatch) => {
-  const response = await api.patch(`/posts/${id}`, formValues);
+export const editPost = (id, formValues) => async (dispatch, getState) => {
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.patch(
+    `/posts/${id}`,
+    {
+      ...formValues,
+      user_id,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
   dispatch({ type: EDIT_POST, payload: response.data });
 };
 
@@ -77,9 +123,19 @@ export const deletePost = (id) => async (dispatch) => {
 };
 
 export const createDomain = (formValues) => async (dispatch, getState) => {
-  const response = await api.post("/domains", {
-    ...formValues,
-  });
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.post(
+    "/domains",
+    {
+      ...formValues,
+      user_id,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
   dispatch({ type: CREATE_DOMAIN, payload: response.data });
   history.goBack();
 };
@@ -89,8 +145,23 @@ export const fetchDomain = (domain) => async (dispatch) => {
   dispatch({ type: FETCH_DOMAIN, payload: response.data });
 };
 
-export const editDomain = (domain, formValues) => async (dispatch) => {
-  const response = await api.put(`/domains/${domain}`, formValues);
+export const editDomain = (domain, formValues) => async (
+  dispatch,
+  getState
+) => {
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.put(
+    `/domains/${domain}`,
+    {
+      ...formValues,
+      user_id,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
   dispatch({ type: EDIT_DOMAIN, payload: response.data });
 };
 

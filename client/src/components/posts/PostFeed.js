@@ -49,16 +49,6 @@ class PostFeed extends React.Component {
   //     }
   //   }
 
-  renderCreate() {
-    //if (this.props.isSignedIn) {
-    return (
-      <Link to={`/d/a/posts/new`}>
-        <Button>Create Post</Button>
-      </Link>
-    );
-    //}
-  }
-
   renderList() {
     return (
       <List
@@ -66,7 +56,7 @@ class PostFeed extends React.Component {
         dataSource={this.props.posts}
         bordered
         pagination={{
-          pageSize: 5,
+          pageSize: 10,
         }}
         renderItem={(post) => (
           <Link to={`/d/${post.domain}/posts/${post.post_id}`}>
@@ -74,7 +64,7 @@ class PostFeed extends React.Component {
               <List.Item.Meta
                 avatar={<Skeleton.Image />}
                 title={post.title}
-                description={post.body}
+                description={post.post_body}
               />
             </List.Item>
           </Link>
@@ -83,10 +73,11 @@ class PostFeed extends React.Component {
     );
   }
 
+  //<h2>{this.props.match.params.domain}</h2>
+
   render() {
     return (
       <>
-        <h2>{this.props.match.params.domain}</h2>
         <Row>
           <Col span={12}>
             <div>
@@ -127,7 +118,6 @@ class PostFeed extends React.Component {
           </Col>
         </Row>
         <div>{this.renderList()}</div>
-        {this.renderCreate()}
       </>
     );
   }

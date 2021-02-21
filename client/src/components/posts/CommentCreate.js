@@ -4,45 +4,48 @@ import { Formik, Field, Form } from "formik";
 import { Input, Button, Space, Alert } from "antd";
 import * as Yup from "yup";
 
-import { signIn } from "../../actions";
+import { createComment } from "../../actions";
 
 const validationSchema = Yup.object({
-  email: Yup.string(),
-  password: Yup.string(),
+  comment: Yup.string().required(),
 });
 
-const Login = (props) => {
-  if (!props.isSignedIn) {
+const CommentCreate = (props) => {
+  if (props.isSignedIn)
     return (
       <div>
-        <h3>Login</h3>
         <Formik
           initialValues={{
-            email: "",
-            password: "",
+            comment: "",
           }}
           onSubmit={(data, { setSubmitting }) => {
             setSubmitting(true);
-            props.signIn(data);
+            props.createComment(
+              {
+                ...data,
+                commentType: props.commentType,
+                parentId: props.parentId ? props.parentId : 0,
+              },
+              props.postId
+            );
             setSubmitting(false);
           }}
           validationSchema={validationSchema}
         >
-          {({ values, isSubmitting, handleChange, errors, touched }) => (
+          {({ values, isSubmitting, errors, touched }) => (
             <Form>
               <Space size="8" direction="vertical" style={{ width: "60%" }}>
-                <label>Email</label>
-                <Field name="email" as={Input} placeholder="Email" />
-                {errors.email && touched.email ? (
-                  <Alert message={errors.email} type="error" showIcon />
-                ) : null}
-                <label>Password</label>
-                <Field name="password" as={Input} placeholder="Password" />
-                {errors.password && touched.password ? (
-                  <Alert message={errors.password} type="error" showIcon />
+                <Field
+                  name="comment"
+                  as={Input}
+                  placeholder="Comment"
+                  autoComplete="off"
+                />
+                {errors.comment && touched.comment ? (
+                  <Alert message={errors.comment} type="error" showIcon />
                 ) : null}
                 <Button type="primary" htmlType="submit" loading={isSubmitting}>
-                  Sign In
+                  Submit
                 </Button>
                 <br />
                 <pre>{JSON.stringify(values, null, 2)}</pre>
@@ -52,13 +55,10 @@ const Login = (props) => {
         </Formik>
       </div>
     );
-  } else {
-    return <div>Already logged in.</div>;
-  }
 };
 
 const mapStateToProps = (state) => {
   return { isSignedIn: state.auth.isSignedIn };
 };
 
-export default connect(mapStateToProps, { signIn })(Login);
+export default connect(mapStateToProps, { createComment })(CommentCreate);

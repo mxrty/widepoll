@@ -46,34 +46,34 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//update a post
-router.put("/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { title, body } = req.body;
-    const updatePost = await pool.query(
-      "UPDATE posts SET title = $1, post_body = $2 WHERE post_id = $3",
-      [title, body, id]
-    );
+// //update a post
+// router.put("/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { title, body } = req.body;
+//     const updatePost = await pool.query(
+//       "UPDATE posts SET title = $1, post_body = $2 WHERE post_id = $3",
+//       [title, body, id]
+//     );
 
-    res.json("Post updated");
-  } catch (err) {
-    console.error(err.message);
-  }
-});
+//     res.json("Post updated");
+//   } catch (err) {
+//     console.error(err.message);
+//   }
+// });
 
-//delete a post
-router.delete("/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deletePost = await pool.query(
-      "DELETE FROM posts WHERE post_id = $1",
-      [id]
-    );
-    res.json("Post deleted");
-  } catch (err) {
-    console.log(err.message);
-  }
-});
+// //delete a post
+// router.delete("/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const deletePost = await pool.query(
+//       "DELETE FROM posts WHERE post_id = $1",
+//       [id]
+//     );
+//     res.json("Post deleted");
+//   } catch (err) {
+//     console.log(err.message);
+//   }
+// });
 
 export default router;

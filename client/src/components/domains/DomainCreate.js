@@ -11,8 +11,8 @@ const validationSchema = Yup.object({
   description: Yup.string(),
 });
 
-class DomainCreate extends React.Component {
-  render() {
+const DomainCreate = (props) => {
+  if (props.isSignedIn) {
     return (
       <div>
         <h3>Create a new domain</h3>
@@ -63,7 +63,13 @@ class DomainCreate extends React.Component {
         </Formik>
       </div>
     );
+  } else {
+    return <div>You must be signed in to create a domain</div>;
   }
-}
+};
 
-export default connect(null, { createDomain })(DomainCreate);
+const mapStateToProps = (state) => {
+  return { isSignedIn: state.auth.isSignedIn };
+};
+
+export default connect(mapStateToProps, { createDomain })(DomainCreate);
