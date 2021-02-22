@@ -1,21 +1,25 @@
 import React, { useState } from "react";
-import { Comment as CommentComponent, Avatar, Tooltip } from "antd";
+import { connect } from "react-redux";
+import { Comment as _Comment, Avatar, Tooltip } from "antd";
 import { LikeOutlined, LikeFilled } from "@ant-design/icons";
 import CommentCreate from "./CommentCreate";
+import { likeComment, unlikeComment } from "../../actions";
 import _ from "lodash";
 
 const Comment = (props) => {
-  const [likes, setLikes] = useState(0);
+  const [likes, setLikes] = useState(parseInt(props.comment.likes));
   const [action, setAction] = useState(null);
   const [reply, setReply] = useState(false);
 
   const like = () => {
-    if (likes === 0) {
-      setLikes(1);
+    if (action !== "liked") {
+      setLikes(likes + 1);
       setAction("liked");
+      likeComment(props.comment.comment_id);
     } else {
-      setLikes(0);
+      setLikes(likes - 1);
       setAction(null);
+      unlikeComment(props.comment.comment_id);
     }
   };
 
@@ -31,10 +35,9 @@ const Comment = (props) => {
   };
 
   const renderChildren = () => {
-    if (props.comment.children) {
-      return Object.entries(props.comment.children).map(([key, value]) => {
-        return <Comment postId={props.postId} comment={value} key={key} />;
-      });
+    if (props.comment.childComments) {
+      console.log(props.comment.childComments);
+      return props.comment.childComments;
     }
   };
 
@@ -56,9 +59,9 @@ const Comment = (props) => {
   ];
 
   return (
-    <CommentComponent
+    <_Comment
       actions={actions}
-      author={<a>{props.comment.comment_id}</a>}
+      author={<a>#{props.comment.comment_id}</a>}
       avatar={
         <Avatar
           src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
@@ -69,8 +72,14 @@ const Comment = (props) => {
     >
       {showReply()}
       {renderChildren()}
-    </CommentComponent>
+    </_Comment>
   );
 };
 
-export default Comment;
+const mapStateToProps = (state, ownProps) => {
+  return { userId: state.auth.user_id };
+};
+
+const MyComment = connect(mapStateToProps, null)(Comment);
+
+export default MyComment;

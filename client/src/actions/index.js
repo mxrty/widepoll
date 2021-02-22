@@ -44,6 +44,29 @@ export const fetchComments = (postId) => async (dispatch) => {
   dispatch({ type: FETCH_COMMENTS, payload: response.data });
 };
 
+export const likeComment = (commentId) => async (dispatch, getState) => {
+  const { jwt_token, user_id } = getState().auth;
+  console.log(commentId);
+  const response = await api.post(
+    `/comments/like/${commentId}`,
+    {
+      user_id,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
+
+  //dispatch({ type: LIKE_COMMENT, payload: response.data });
+};
+
+export const unlikeComment = (commentId) => async (dispatch) => {
+  const response = await api.post(`/comments/unlike/${commentId}`);
+  //dispatch({ type: LIKE_COMMENT, payload: response.data });
+};
+
 export const signIn = (formValues) => async (dispatch) => {
   const response = await api.post("/auth/login", {
     ...formValues,

@@ -4,7 +4,8 @@ import Comment from "./Comment";
 import { Card } from "antd";
 import { fetchComments } from "../../actions";
 
-import _, { find } from "lodash";
+import _ from "lodash";
+import CommentCreate from "./CommentCreate";
 
 const PostComments = (props) => {
   useEffect(() => {
@@ -19,7 +20,12 @@ const PostComments = (props) => {
     }
   };
 
-  return <Card style={{ marginTop: "5px" }}>{renderComments()}</Card>;
+  return (
+    <Card style={{ marginTop: "5px" }}>
+      <CommentCreate postId={props.postId} commentType="ROOT" />
+      {renderComments()}
+    </Card>
+  );
 };
 
 const structureComments = (state, ownProps) => {
@@ -29,7 +35,12 @@ const structureComments = (state, ownProps) => {
     }),
   };
 
-  findChildren(structured, state.posts[ownProps.postId].comments);
+  for (let [key, comment] of Object.entries(structured)) {
+    comment.children = [<Comment />];
+  }
+
+  //function to set comment props (children)
+  //findChildren(structured, state.posts[ownProps.postId].comments);
 
   return structured;
 };
@@ -43,7 +54,18 @@ const findChildren = (parents, reference) => {
           return _.includes(children, value.comment_id);
         }),
       };
-      comment.children = childComments;
+      console.log(childComments);
+      console.log(
+        Object.entries(childComments).map(([key, value]) => {
+          return <Comment postId={value.post_id} comment={value} key={key} />;
+        })
+      );
+
+      comment.childComments = Object.entries(childComments).map(
+        ([key, value]) => {
+          return <Comment postId={value.post_id} comment={value} key={key} />;
+        }
+      );
       findChildren(comment.children, reference);
     }
   }
@@ -52,7 +74,6 @@ const findChildren = (parents, reference) => {
 const mapStateToProps = (state, ownProps) => {
   return {
     comments: structureComments(_.cloneDeep(state), ownProps),
-    //comments: state.posts[ownProps.postId].comments,
   };
 };
 

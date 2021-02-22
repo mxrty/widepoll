@@ -13,7 +13,7 @@ const validationSchema = Yup.object({
 const CommentCreate = (props) => {
   if (props.isSignedIn)
     return (
-      <div>
+      <div style={{ backgroundColor: "lightgrey", padding: "12px" }}>
         <Formik
           initialValues={{
             comment: "",
@@ -34,22 +34,18 @@ const CommentCreate = (props) => {
         >
           {({ values, isSubmitting, errors, touched }) => (
             <Form>
-              <Space size="8" direction="vertical" style={{ width: "60%" }}>
-                <Field
-                  name="comment"
-                  as={Input}
-                  placeholder="Comment"
-                  autoComplete="off"
-                />
-                {errors.comment && touched.comment ? (
-                  <Alert message={errors.comment} type="error" showIcon />
-                ) : null}
-                <Button type="primary" htmlType="submit" loading={isSubmitting}>
-                  Submit
-                </Button>
-                <br />
-                <pre>{JSON.stringify(values, null, 2)}</pre>
-              </Space>
+              <Field
+                name="comment"
+                as={Input}
+                placeholder="Comment"
+                autoComplete="off"
+              />
+              {errors.comment && touched.comment ? (
+                <Alert message={errors.comment} type="error" showIcon />
+              ) : null}
+              <Button type="primary" htmlType="submit" loading={isSubmitting}>
+                Submit
+              </Button>
             </Form>
           )}
         </Formik>

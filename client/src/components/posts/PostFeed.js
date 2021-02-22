@@ -1,59 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  List,
-  Skeleton,
-  Button,
-  Row,
-  Col,
-  Menu,
-  Dropdown,
-  Radio,
-  Space,
-} from "antd";
+import { List, Skeleton, Button, Row, Col, Menu, Dropdown, Radio } from "antd";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
 
 import { fetchPosts } from "../../actions";
 
-class PostFeed extends React.Component {
-  componentDidMount() {
-    this.props.fetchPosts();
-  }
+const PostFeed = (props) => {
+  useEffect(() => {
+    props.fetchPosts();
+  }, []);
+  const [sort, setSort] = useState("Trending");
 
-  handleMenuClick = (e) => {
-    this.setState({ sort: e.key });
+  const handleMenuClick = (e) => {
+    setSort(e.key);
   };
 
-  constructor(props) {
-    super(props);
-    // TODO: store sort in redux so it is global
-    this.state = { sort: "Trending" };
-  }
-
-  //   renderAdmin(stream) {
-  //     if (stream.userId === this.props.currentUserId) {
-  //       return (
-  //         <div className="right floated content">
-  //           <Link to={`/streams/edit/${stream.id}`} className="ui button primary">
-  //             Edit
-  //           </Link>
-  //           <Link
-  //             to={`/streams/delete/${stream.id}`}
-  //             className="ui button negative"
-  //           >
-  //             Delete
-  //           </Link>
-  //         </div>
-  //       );
-  //     }
-  //   }
-
-  renderList() {
+  const renderList = () => {
     return (
       <List
         itemLayout="horizontal"
-        dataSource={this.props.posts}
+        dataSource={props.posts}
         bordered
         pagination={{
           pageSize: 10,
@@ -63,7 +30,11 @@ class PostFeed extends React.Component {
             <List.Item>
               <List.Item.Meta
                 avatar={<Skeleton.Image />}
-                title={post.title}
+                title={
+                  <div>
+                    {post.post_type}: {post.title}
+                  </div>
+                }
                 description={post.post_body}
               />
             </List.Item>
@@ -71,63 +42,55 @@ class PostFeed extends React.Component {
         )}
       />
     );
-  }
+  };
 
   //<h2>{this.props.match.params.domain}</h2>
 
-  render() {
-    return (
-      <>
-        <Row>
-          <Col span={12}>
-            <div>
-              <Dropdown
-                overlay={
-                  <Menu onClick={this.handleMenuClick}>
-                    <Menu.Item key="Trending" icon={<UserOutlined />}>
-                      Trending
-                    </Menu.Item>
-                    <Menu.Item key="Top" icon={<UserOutlined />}>
-                      Top
-                    </Menu.Item>
-                    <Menu.Item key="New" icon={<UserOutlined />}>
-                      New
-                    </Menu.Item>
-                  </Menu>
-                }
-              >
-                <Button>
-                  {this.state.sort} <DownOutlined />
-                </Button>
-              </Dropdown>
-            </div>
-          </Col>
-          <Col span={12}>
-            <div style={{ float: "right" }}>
-              <Radio.Group
-                defaultValue="ALL"
-                name="postType"
-                buttonStyle="solid"
-              >
-                <Radio.Button value="ALL">All</Radio.Button>
-                <Radio.Button value="DISCUSSION">Discussion</Radio.Button>
-                <Radio.Button value="ISSUE">Issue</Radio.Button>
-                <Radio.Button value="SOLUTION">Solution</Radio.Button>
-              </Radio.Group>
-            </div>
-          </Col>
-        </Row>
-        <div>{this.renderList()}</div>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Row>
+        <Col span={12}>
+          <div>
+            <Dropdown
+              overlay={
+                <Menu onClick={handleMenuClick}>
+                  <Menu.Item key="Trending" icon={<UserOutlined />}>
+                    Trending
+                  </Menu.Item>
+                  <Menu.Item key="Top" icon={<UserOutlined />}>
+                    Top
+                  </Menu.Item>
+                  <Menu.Item key="New" icon={<UserOutlined />}>
+                    New
+                  </Menu.Item>
+                </Menu>
+              }
+            >
+              <Button>
+                {sort} <DownOutlined />
+              </Button>
+            </Dropdown>
+          </div>
+        </Col>
+        <Col span={12}>
+          <div style={{ float: "right" }}>
+            <Radio.Group defaultValue="ALL" name="postType" buttonStyle="solid">
+              <Radio.Button value="ALL">All</Radio.Button>
+              <Radio.Button value="DISCUSSION">Discussion</Radio.Button>
+              <Radio.Button value="ISSUE">Issue</Radio.Button>
+              <Radio.Button value="SOLUTION">Solution</Radio.Button>
+            </Radio.Group>
+          </div>
+        </Col>
+      </Row>
+      <div>{renderList()}</div>
+    </>
+  );
+};
 
 const mapStateToProps = (state) => {
   return {
     posts: Object.values(state.posts),
-    // currentUserId: state.auth.userId,
-    // isSignedIn: state.auth.isSignedIn,
   };
 };
 

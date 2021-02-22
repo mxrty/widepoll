@@ -12,12 +12,12 @@ import {
 const assignChildren = (commentsArr) => {
   const comments = _.mapKeys(commentsArr, "comment_id");
   for (let [key, comment] of Object.entries(comments)) {
-    if (comment.comment_type === "REPLY") {
-      const parent = comments[comment.parent_id];
-      if (parent) {
-        if (!parent.children) {
-          parent.children = [];
-        }
+    const parent = comments[comment.parent_id];
+    if (parent) {
+      if (!parent.children) {
+        parent.children = [];
+      }
+      if (comment.comment_type === "REPLY") {
         parent.children.push(comment.comment_id);
       }
     }
@@ -45,7 +45,7 @@ export default (state = {}, action) => {
           ...state[action.payload.post_id],
           comments: {
             ...state[action.payload.post_id].comments,
-            [action.payload.comment_id]: action.payload,
+            [action.payload.comment_id]: { ...action.payload, children: [] },
             [action.payload.parent_id]: {
               ...state[action.payload.post_id].comments[
                 action.payload.parent_id
