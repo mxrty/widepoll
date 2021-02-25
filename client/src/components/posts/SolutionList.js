@@ -3,43 +3,57 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { List, Skeleton, Button, Row, Col, Menu, Dropdown, Radio } from "antd";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
+import SolutionListItem from "./SolutionListItem";
 
-import { fetchPosts } from "../../actions";
+import { fetchSolutions } from "../../actions";
 
-const SolutionList = ({ solutions }) => {
+const SolutionList = (props) => {
+  useEffect(() => {
+    props.fetchSolutions(props.postId);
+  }, []);
+
+  const renderCreate = () => {
+    if (props.isSignedIn) {
+      return (
+        <Link to={`/d/${props.domain}/posts/${props.postId}/solutions/new`}>
+          <Button>Create a Solution</Button>
+        </Link>
+      );
+    }
+  };
+
   const renderList = () => {
+    console.log(props.solutions);
     return (
       <List
         itemLayout="horizontal"
-        dataSource={solutions}
+        dataSource={props.solutions}
         bordered
         pagination={{
           pageSize: 10,
         }}
         renderItem={(solution) => (
           <Link to={`/d/${solution.domain}/posts/${solution.solution_id}`}>
-            <List.Item>
-              <List.Item.Meta
-                avatar={<Skeleton.Image />}
-                title={<div>{solution.title}</div>}
-                description={solution.post_body}
-              />
-            </List.Item>
+            <SolutionListItem solution={solution} />
           </Link>
         )}
       />
     );
   };
 
-  //<h2>{this.props.match.params.domain}</h2>
-
-  return <div>{renderList()}</div>;
+  return (
+    <>
+      {renderCreate()}
+      {renderList()}
+    </>
+  );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    posts: Object.values(state.posts),
+    isSignedIn: state.auth.isSignedIn,
+    solutions: state.posts[ownProps.postId].solutions,
   };
 };
 
-export default SolutionList;
+export default connect(mapStateToProps, { fetchSolutions })(SolutionList);

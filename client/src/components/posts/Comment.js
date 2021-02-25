@@ -6,20 +6,20 @@ import CommentCreate from "./CommentCreate";
 import { likeComment, unlikeComment } from "../../actions";
 import _ from "lodash";
 
-const Comment = (props) => {
-  const [likes, setLikes] = useState(parseInt(props.comment.likes));
+const MyComment = (props) => {
+  const [likes, setLikes] = useState(parseInt(props.likes));
   const [action, setAction] = useState(null);
   const [reply, setReply] = useState(false);
 
   const like = () => {
     if (action !== "liked") {
-      setLikes(likes + 1);
       setAction("liked");
-      likeComment(props.comment.comment_id);
+      props.likeComment(props.comment.comment_id, props.postId);
+      setLikes(likes + 1);
     } else {
-      setLikes(likes - 1);
       setAction(null);
-      unlikeComment(props.comment.comment_id);
+      props.unlikeComment(props.comment.comment_id, props.postId);
+      setLikes(likes - 1);
     }
   };
 
@@ -35,9 +35,10 @@ const Comment = (props) => {
   };
 
   const renderChildren = () => {
-    if (props.comment.childComments) {
-      console.log(props.comment.childComments);
-      return props.comment.childComments;
+    if (props.comment.children) {
+      return Object.entries(props.comment.children).map(([key, value]) => {
+        return <Comment postId={props.postId} comment={value} key={key} />;
+      });
     }
   };
 
@@ -77,9 +78,17 @@ const Comment = (props) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  return { userId: state.auth.user_id };
+  return {
+    userId: state.auth.user_id,
+    likes:
+      state.posts[ownProps.comment.post_id].comments[
+        ownProps.comment.comment_id
+      ].likes,
+  };
 };
 
-const MyComment = connect(mapStateToProps, null)(Comment);
+const Comment = connect(mapStateToProps, { likeComment, unlikeComment })(
+  MyComment
+);
 
-export default MyComment;
+export default Comment;

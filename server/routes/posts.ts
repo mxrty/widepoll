@@ -46,6 +46,20 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//get (n) most recent posts
+router.get("/latest/:num", async (req, res) => {
+  try {
+    const { num } = req.params;
+    const latestPosts = await pool.query(
+      "SELECT * FROM POSTS ORDER BY CREATED_AT DESC FETCH FIRST $1 ROWS ONLY",
+      [num]
+    );
+    res.json(latestPosts.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // //update a post
 // router.put("/:id", async (req, res) => {
 //   try {

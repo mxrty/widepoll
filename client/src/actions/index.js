@@ -15,7 +15,35 @@ import {
   REGISTER,
   CREATE_COMMENT,
   FETCH_COMMENTS,
+  CREATE_SOLUTION,
+  LIKE_COMMENT,
+  UNLIKE_COMMENT,
+  FETCH_SOLUTIONS,
 } from "./types";
+
+export const createSolution = (formValues) => async (dispatch, getState) => {
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.post(
+    "/solutions",
+    {
+      ...formValues,
+      user_id,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
+
+  dispatch({ type: CREATE_SOLUTION, payload: response.data });
+  history.goBack();
+};
+
+export const fetchSolutions = (postId) => async (dispatch) => {
+  const response = await api.get(`/solutions/${postId}`);
+  dispatch({ type: FETCH_SOLUTIONS, payload: response.data });
+};
 
 export const createComment = (formValues, postId) => async (
   dispatch,
@@ -44,9 +72,11 @@ export const fetchComments = (postId) => async (dispatch) => {
   dispatch({ type: FETCH_COMMENTS, payload: response.data });
 };
 
-export const likeComment = (commentId) => async (dispatch, getState) => {
+export const likeComment = (commentId, postId) => async (
+  dispatch,
+  getState
+) => {
   const { jwt_token, user_id } = getState().auth;
-  console.log(commentId);
   const response = await api.post(
     `/comments/like/${commentId}`,
     {
@@ -59,11 +89,26 @@ export const likeComment = (commentId) => async (dispatch, getState) => {
     }
   );
 
-  //dispatch({ type: LIKE_COMMENT, payload: response.data });
+  const payload = { ...response.data, postId };
+  dispatch({ type: LIKE_COMMENT, payload: payload });
 };
 
-export const unlikeComment = (commentId) => async (dispatch) => {
-  const response = await api.post(`/comments/unlike/${commentId}`);
+export const unlikeComment = (commentId, postId) => async (
+  dispatch,
+  getState
+) => {
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.post(
+    `/comments/unlike/${commentId}`,
+    {
+      user_id,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
   //dispatch({ type: LIKE_COMMENT, payload: response.data });
 };
 

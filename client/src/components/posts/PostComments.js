@@ -35,12 +35,7 @@ const structureComments = (state, ownProps) => {
     }),
   };
 
-  for (let [key, comment] of Object.entries(structured)) {
-    comment.children = [<Comment />];
-  }
-
-  //function to set comment props (children)
-  //findChildren(structured, state.posts[ownProps.postId].comments);
+  findChildren(structured, state.posts[ownProps.postId].comments);
 
   return structured;
 };
@@ -54,18 +49,7 @@ const findChildren = (parents, reference) => {
           return _.includes(children, value.comment_id);
         }),
       };
-      console.log(childComments);
-      console.log(
-        Object.entries(childComments).map(([key, value]) => {
-          return <Comment postId={value.post_id} comment={value} key={key} />;
-        })
-      );
-
-      comment.childComments = Object.entries(childComments).map(
-        ([key, value]) => {
-          return <Comment postId={value.post_id} comment={value} key={key} />;
-        }
-      );
+      comment.children = childComments;
       findChildren(comment.children, reference);
     }
   }

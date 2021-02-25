@@ -22,6 +22,7 @@ import Search from "./app/Search";
 import Explore from "./app/Explore";
 import PollCreate from "./polls/PollCreate";
 import Settings from "./app/Settings";
+import SolutionCreate from "./posts/SolutionCreate";
 
 const { Content } = Layout;
 
@@ -55,6 +56,11 @@ const App = () => {
                   path="/d/:domain/posts/new"
                   exact
                   component={PostCreate}
+                />
+                <Route
+                  path="/d/:domain/posts/:postId/solutions/new"
+                  exact
+                  component={SolutionCreate}
                 />
                 <Route
                   path="/d/:domain/posts/:postId"

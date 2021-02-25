@@ -43,7 +43,10 @@ const PostShow = (props) => {
           <PostComments postId={props.post.post_id} />
         </Col>
         <Col span={8} style={{ padding: "5px" }}>
-          <SolutionList solutions={props.post.solutions} />
+          <SolutionList
+            postId={props.post.post_id}
+            domain={props.post.domain}
+          />
         </Col>
       </Row>
     );

@@ -7,6 +7,10 @@ import {
   DELETE_POST,
   CREATE_COMMENT,
   FETCH_COMMENTS,
+  LIKE_COMMENT,
+  UNLIKE_COMMENT,
+  CREATE_SOLUTION,
+  FETCH_SOLUTIONS,
 } from "../actions/types";
 
 const assignChildren = (commentsArr) => {
@@ -38,7 +42,6 @@ export default (state = {}, action) => {
     case DELETE_POST:
       return _.omit(state, action.payload);
     case CREATE_COMMENT:
-      //CHECK CASE WHERE NO CHILDREN OBJECT OR MAKE empty arrrays
       return {
         ...state,
         [action.payload.post_id]: {
@@ -70,6 +73,63 @@ export default (state = {}, action) => {
           },
         };
       }
+      return state;
+    case LIKE_COMMENT:
+      // return {
+      //   ...state,
+      //   [action.payload.postId]: {
+      //     ...state[action.payload.postId],
+      //     comments: {
+      //       ...state[action.payload.postId].comments,
+      //       [action.payload.comment_id]: {
+      //         ...state[action.payload.postId].comments[
+      //           action.payload.comment_id
+      //         ],
+      //         likes: 5,
+      //       },
+      //     },
+      //   },
+      // };
+      break;
+    case UNLIKE_COMMENT:
+      break;
+    case CREATE_SOLUTION:
+      if (state[action.payload.issue_id].solutions) {
+      } else {
+        return {
+          ...state,
+          [action.payload.issue_id]: {
+            ...state[action.payload.issue_id],
+            solutions: {
+              [action.payload.solution_id]: action.payload,
+            },
+          },
+        };
+      }
+    case FETCH_SOLUTIONS:
+      console.log({
+        ...state,
+        [action.payload[0].issue_id]: {
+          ...state[action.payload[0].issue_id],
+          solutions: {
+            ...state[action.payload[0].issue_id].solutions,
+            ..._.mapKeys(action.payload, "solution_id"),
+          },
+        },
+      });
+      // if (action.payload) {
+      //   return {
+      //     ...state,
+      //     [action.payload[0].issue_id]: {
+      //       ...state[action.payload[0].issue_id],
+      //       solutions: {
+      //         ...state[action.payload[0].issue_id].solutions,
+      //         ..._.mapKeys(action.payload, "solution_id"),
+      //       },
+      //     },
+      //   };
+      // }
+      return state;
     default:
       return state;
   }
