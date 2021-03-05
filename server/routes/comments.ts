@@ -29,7 +29,7 @@ router.get("/:post_id", async (req, res) => {
       "SELECT COMMENTS.*, COALESCE(COUNTS.LIKES,0) as likes FROM (SELECT * FROM COMMENTS WHERE POST_ID = $1) AS COMMENTS LEFT OUTER JOIN (SELECT COMMENT_ID, COUNT(*) AS LIKES FROM COMMENT_LIKES GROUP BY COMMENT_ID) AS COUNTS ON (COMMENTS.COMMENT_ID = COUNTS.COMMENT_ID)",
       [post_id]
     );
-    res.json(comments);
+    res.json(comments.rows);
   } catch (err) {
     console.error(err.message);
   }

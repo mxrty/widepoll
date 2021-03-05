@@ -35,8 +35,8 @@ const MyComment = (props) => {
   };
 
   const renderChildren = () => {
-    if (props.comment.children) {
-      return Object.entries(props.comment.children).map(([key, value]) => {
+    if (props.children) {
+      return Object.entries(props.children).map(([key, value]) => {
         return <Comment postId={props.postId} comment={value} key={key} />;
       });
     }
@@ -59,22 +59,24 @@ const MyComment = (props) => {
     </span>,
   ];
 
-  return (
-    <_Comment
-      actions={actions}
-      author={<a>#{props.comment.comment_id}</a>}
-      avatar={
-        <Avatar
-          src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-          alt="Han Solo"
-        />
-      }
-      content={<p>{props.comment.comment_body}</p>}
-    >
-      {showReply()}
-      {renderChildren()}
-    </_Comment>
-  );
+  if (props.likes) {
+    return (
+      <_Comment
+        actions={actions}
+        author={<a>#{props.comment.comment_id}</a>}
+        avatar={
+          <Avatar
+            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+            alt="Han Solo"
+          />
+        }
+        content={<p>{props.comment.comment_body}</p>}
+      >
+        {showReply()}
+        {renderChildren()}
+      </_Comment>
+    );
+  }
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -84,6 +86,12 @@ const mapStateToProps = (state, ownProps) => {
       state.posts[ownProps.comment.post_id].comments[
         ownProps.comment.comment_id
       ].likes,
+    children: _.pickBy(
+      state.posts[ownProps.comment.post_id].comments,
+      (value) => {
+        return _.includes(ownProps.comment.children, value.comment_id);
+      }
+    ),
   };
 };
 

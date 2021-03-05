@@ -28,36 +28,11 @@ const PostComments = (props) => {
   );
 };
 
-const structureComments = (state, ownProps) => {
-  const structured = {
-    ..._.pickBy(state.posts[ownProps.postId].comments, (value) => {
-      return value.comment_type === "ROOT";
-    }),
-  };
-
-  findChildren(structured, state.posts[ownProps.postId].comments);
-
-  return structured;
-};
-
-const findChildren = (parents, reference) => {
-  for (let [key, comment] of Object.entries(parents)) {
-    const children = comment.children;
-    if (children) {
-      const childComments = {
-        ..._.pickBy(reference, (value) => {
-          return _.includes(children, value.comment_id);
-        }),
-      };
-      comment.children = childComments;
-      findChildren(comment.children, reference);
-    }
-  }
-};
-
 const mapStateToProps = (state, ownProps) => {
   return {
-    comments: structureComments(_.cloneDeep(state), ownProps),
+    comments: _.pickBy(state.comments[ownProps.postId], (value) => {
+      return value.comment_type === "ROOT";
+    }),
   };
 };
 

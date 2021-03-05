@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { List, Skeleton, Button, Row, Col, Menu, Dropdown, Radio } from "antd";
-import { DownOutlined, UserOutlined } from "@ant-design/icons";
+import { List, Button } from "antd";
+
 import SolutionListItem from "./SolutionListItem";
 
 import { fetchSolutions } from "../../actions";
@@ -23,7 +23,6 @@ const SolutionList = (props) => {
   };
 
   const renderList = () => {
-    console.log(props.solutions);
     return (
       <List
         itemLayout="horizontal"
@@ -32,11 +31,7 @@ const SolutionList = (props) => {
         pagination={{
           pageSize: 10,
         }}
-        renderItem={(solution) => (
-          <Link to={`/d/${solution.domain}/posts/${solution.solution_id}`}>
-            <SolutionListItem solution={solution} />
-          </Link>
-        )}
+        renderItem={(solution) => <SolutionListItem solution={solution} />}
       />
     );
   };
@@ -52,7 +47,7 @@ const SolutionList = (props) => {
 const mapStateToProps = (state, ownProps) => {
   return {
     isSignedIn: state.auth.isSignedIn,
-    solutions: state.posts[ownProps.postId].solutions,
+    solutions: Object.values(state.posts[ownProps.postId].solutions),
   };
 };
 

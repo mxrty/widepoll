@@ -15,9 +15,20 @@ const PostShow = (props) => {
   const renderPostBody = () => {
     if (props.post) {
       return (
-        <Card type="inner" title={props.post.title}>
-          <p>{props.post.post_body}</p>
-        </Card>
+        <>
+          <Card type="inner" title={props.post.title}>
+            <p>{props.post.post_body}</p>
+          </Card>
+          <PostComments postId={props.post.post_id} />
+        </>
+      );
+    }
+  };
+
+  const renderSolutions = () => {
+    if (props.post) {
+      return (
+        <SolutionList postId={props.post.post_id} domain={props.post.domain} />
       );
     }
   };
@@ -28,7 +39,6 @@ const PostShow = (props) => {
       <Row>
         <Col span={14} style={{ padding: "5px" }}>
           {renderPostBody()}
-          <PostComments postId={props.post.post_id} />
         </Col>
         <Col span={6} style={{ padding: "5px" }}>
           <DomainBlurb />
@@ -40,13 +50,9 @@ const PostShow = (props) => {
       <Row>
         <Col span={14} style={{ padding: "5px" }}>
           {renderPostBody()}
-          <PostComments postId={props.post.post_id} />
         </Col>
         <Col span={8} style={{ padding: "5px" }}>
-          <SolutionList
-            postId={props.post.post_id}
-            domain={props.post.domain}
-          />
+          {renderSolutions()}
         </Col>
       </Row>
     );

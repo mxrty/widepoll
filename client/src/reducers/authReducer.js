@@ -1,48 +1,4 @@
-// import { REGISTER, SIGN_IN, SIGN_OUT } from "../actions/types";
-
-// const INTIAL_STATE = {
-//   isSignedIn: false,
-//   user_id: null,
-//   user_name: null,
-//   user_email: null,
-//   jwt_token: null,
-// };
-
-// export default (state = INTIAL_STATE, action) => {
-//   const { user_id, user_name, user_email, jwt_token } = action.payload;
-//   switch (action.type) {
-//     case SIGN_IN:
-//       return {
-//         ...state,
-//         isSignedIn: true,
-//         user_id,
-//         user_name,
-//         user_email,
-//         jwt_token,
-//       };
-//     case SIGN_OUT:
-//       return {
-//         ...state,
-//         isSignedIn: false,
-//         user_id: null,
-//         user_name: null,
-//         user_email: null,
-//         jwt_token: null,
-//       };
-//     case REGISTER:
-//       return {
-//         ...state,
-//         isSignedIn: true,
-//         user_id,
-//         user_name,
-//         user_email,
-//         jwt_token,
-//       };
-//     default:
-//       return state;
-//   }
-// };
-
+import produce from "immer";
 import { REGISTER, SIGN_IN, SIGN_OUT } from "../actions/types";
 
 const INITIAL_STATE = {
@@ -53,31 +9,26 @@ const INITIAL_STATE = {
   jwt_token: null,
 };
 
-export default (state = INITIAL_STATE, action) => {
+export default produce((draft, action = {}) => {
+  if (!action.payload) {
+    return;
+  }
   switch (action.type) {
     case SIGN_IN:
-      return {
-        ...state,
-        isSignedIn: true,
-        user_id: action.payload.user_id,
-        user_name: action.payload.user_name,
-        user_email: action.payload.user_email,
-        jwt_token: action.payload.jwt_token,
-      };
+      draft.isSignedIn = true;
+      draft.user_id = action.payload.user_id;
+      draft.user_name = action.payload.user_name;
+      draft.user_email = action.payload.user_email;
+      draft.jwt_token = action.payload.jwt_token;
+      return;
     case SIGN_OUT:
-      return {
-        ...INITIAL_STATE,
-      };
+      return INITIAL_STATE;
     case REGISTER:
-      return {
-        ...state,
-        isSignedIn: true,
-        user_id: action.payload.user_id,
-        user_name: action.payload.user_name,
-        user_email: action.payload.user_email,
-        jwt_token: action.payload.jwt_token,
-      };
-    default:
-      return state;
+      draft.isSignedIn = true;
+      draft.user_id = action.payload.user_id;
+      draft.user_name = action.payload.user_name;
+      draft.user_email = action.payload.user_email;
+      draft.jwt_token = action.payload.jwt_token;
+      return;
   }
-};
+}, INITIAL_STATE);

@@ -1,3 +1,4 @@
+import produce from "immer";
 import _ from "lodash";
 import {
   CREATE_DOMAIN,
@@ -6,17 +7,22 @@ import {
   DELETE_DOMAIN,
 } from "../actions/types";
 
-export default (state = {}, action) => {
+export default produce((draft, action = {}) => {
+  if (!action.payload) {
+    return;
+  }
   switch (action.type) {
     case CREATE_DOMAIN:
-      return { ...state, [action.payload.domain_name]: action.payload };
+      draft[action.payload.domain_name] = action.payload;
+      return;
     case FETCH_DOMAIN:
-      return { ...state, [action.payload.domain_name]: action.payload };
+      draft[action.payload.domain_name] = action.payload;
+      return;
     case EDIT_DOMAIN:
-      return { ...state, [action.payload.domain_name]: action.payload };
+      draft[action.payload.domain_name] = action.payload;
+      return;
     case DELETE_DOMAIN:
-      return _.omit(state, action.payload);
-    default:
-      return state;
+      delete draft[action.payload.domain_name];
+      return;
   }
-};
+}, {});
