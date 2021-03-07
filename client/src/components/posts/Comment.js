@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { Comment as _Comment, Avatar, Tooltip } from "antd";
+import { Comment as AntComment, Avatar, Tooltip } from "antd";
 import { LikeOutlined, LikeFilled } from "@ant-design/icons";
 import CommentCreate from "./CommentCreate";
 import { likeComment, unlikeComment } from "../../actions";
 import _ from "lodash";
 
 const MyComment = (props) => {
-  const [likes, setLikes] = useState(parseInt(props.likes));
   const [action, setAction] = useState(null);
   const [reply, setReply] = useState(false);
 
@@ -15,11 +14,9 @@ const MyComment = (props) => {
     if (action !== "liked") {
       setAction("liked");
       props.likeComment(props.comment.comment_id, props.postId);
-      setLikes(likes + 1);
     } else {
       setAction(null);
       props.unlikeComment(props.comment.comment_id, props.postId);
-      setLikes(likes - 1);
     }
   };
 
@@ -46,7 +43,7 @@ const MyComment = (props) => {
     <Tooltip key="comment-basic-like" title="Like">
       <span onClick={like}>
         {action === "liked" ? <LikeFilled /> : <LikeOutlined />}
-        <span className="comment-action">{likes}</span>
+        <span className="comment-action">{props.likes}</span>
       </span>
     </Tooltip>,
     <span
@@ -59,9 +56,9 @@ const MyComment = (props) => {
     </span>,
   ];
 
-  if (props.likes) {
+  if (props.likes !== null) {
     return (
-      <_Comment
+      <AntComment
         actions={actions}
         author={<a>#{props.comment.comment_id}</a>}
         avatar={
@@ -74,24 +71,21 @@ const MyComment = (props) => {
       >
         {showReply()}
         {renderChildren()}
-      </_Comment>
+      </AntComment>
     );
   }
+  return null;
 };
 
 const mapStateToProps = (state, ownProps) => {
   return {
     userId: state.auth.user_id,
     likes:
-      state.posts[ownProps.comment.post_id].comments[
-        ownProps.comment.comment_id
-      ].likes,
-    children: _.pickBy(
-      state.posts[ownProps.comment.post_id].comments,
-      (value) => {
-        return _.includes(ownProps.comment.children, value.comment_id);
-      }
-    ),
+      state.comments[ownProps.comment.post_id][ownProps.comment.comment_id]
+        .likes,
+    children: _.pickBy(state.comments[ownProps.comment.post_id], (value) => {
+      return _.includes(ownProps.comment.children, value.comment_id);
+    }),
   };
 };
 

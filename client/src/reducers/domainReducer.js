@@ -1,5 +1,4 @@
 import produce from "immer";
-import _ from "lodash";
 import {
   CREATE_DOMAIN,
   FETCH_DOMAIN,
@@ -23,6 +22,8 @@ export default produce((draft, action = {}) => {
       return;
     case DELETE_DOMAIN:
       delete draft[action.payload.domain_name];
+      return;
+    default:
       return;
   }
 }, {});

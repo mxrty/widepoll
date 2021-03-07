@@ -1,23 +1,20 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import { List, Skeleton, Row, Col } from "antd";
 import { LikeOutlined, LikeFilled } from "@ant-design/icons";
+import { likeSolution, unlikeSolution } from "../../actions";
 
 const SolutionListItem = (props) => {
-  const [likes, setLikes] = useState(
-    props.solution.likes ? parseInt(props.solution.likes) : 0
-  );
   const [action, setAction] = useState(null);
 
   const like = () => {
     if (action !== "liked") {
       setAction("liked");
-      //props.likeComment(props.comment.comment_id, props.postId);
-      setLikes(likes + 1);
+      props.likeSolution(props.solution.issue_id, props.solution.solution_id);
     } else {
       setAction(null);
-      //props.unlikeComment(props.comment.comment_id, props.postId);
-      setLikes(likes - 1);
+      props.unlikeSolution(props.solution.issue_id, props.solution.solution_id);
     }
   };
 
@@ -26,7 +23,7 @@ const SolutionListItem = (props) => {
       <Col>
         <span onClick={like}>
           {action === "liked" ? <LikeFilled /> : <LikeOutlined />}
-          {likes}
+          {props.likes ? props.likes : 0}
         </span>
       </Col>
       <Col>
@@ -46,4 +43,14 @@ const SolutionListItem = (props) => {
   );
 };
 
-export default SolutionListItem;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    likes:
+      state.solutions[ownProps.solution.issue_id][ownProps.solution.solution_id]
+        .likes,
+  };
+};
+
+export default connect(mapStateToProps, { likeSolution, unlikeSolution })(
+  SolutionListItem
+);

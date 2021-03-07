@@ -5,6 +5,7 @@ import { List, Skeleton, Button, Row, Col, Menu, Dropdown, Radio } from "antd";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
 
 import { fetchPosts } from "../../actions";
+import PostFeedItem from "./PostFeedItem";
 
 const PostFeed = (props) => {
   useEffect(() => {
@@ -26,25 +27,24 @@ const PostFeed = (props) => {
           pageSize: 10,
         }}
         renderItem={(post) => (
-          <Link to={`/d/${post.domain}/posts/${post.post_id}`}>
-            <List.Item>
-              <List.Item.Meta
-                avatar={<Skeleton.Image />}
-                title={
-                  <div>
-                    {post.post_type}: {post.title}
-                  </div>
-                }
-                description={post.post_body}
-              />
-            </List.Item>
-          </Link>
+          <PostFeedItem post={post} />
+          // <Link to={`/d/${post.domain}/posts/${post.post_id}`}>
+          //   <List.Item>
+          //     <List.Item.Meta
+          //       avatar={<Skeleton.Image />}
+          //       title={
+          //         <div>
+          //           {post.post_type}: {post.title}
+          //         </div>
+          //       }
+          //       description={post.post_body}
+          //     />
+          //   </List.Item>
+          // </Link>
         )}
       />
     );
   };
-
-  //<h2>{this.props.match.params.domain}</h2>
 
   return (
     <>
@@ -76,9 +76,8 @@ const PostFeed = (props) => {
           <div style={{ float: "right" }}>
             <Radio.Group defaultValue="ALL" name="postType" buttonStyle="solid">
               <Radio.Button value="ALL">All</Radio.Button>
-              <Radio.Button value="DISCUSSION">Discussion</Radio.Button>
-              <Radio.Button value="ISSUE">Issue</Radio.Button>
-              <Radio.Button value="SOLUTION">Solution</Radio.Button>
+              <Radio.Button value="DISCUSSION">Discussions</Radio.Button>
+              <Radio.Button value="ISSUE">Issues</Radio.Button>
             </Radio.Group>
           </div>
         </Col>

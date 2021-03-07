@@ -1,17 +1,15 @@
 import React from "react";
-import { Router, Route, Switch, Link } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 import { Layout, Col, Row } from "antd";
 
 import history from "../history";
 import PostCreate from "./posts/PostCreate";
 import PostShow from "./posts/PostShow";
-import PostFeed from "./posts/PostFeed";
 import Home from "./app/Home";
 import AdminPanel from "./AdminPanel";
 import Showcase from "./Showcase";
 import DomainCreate from "./domains/DomainCreate";
 import DomainEdit from "./domains/DomainEdit";
-import RecentPosts from "./posts/RecentPosts";
 import Login from "./accounts/Login";
 import Register from "./accounts/Register";
 import Header from "./layout/Header";
@@ -22,7 +20,7 @@ import Search from "./app/Search";
 import Explore from "./app/Explore";
 import PollCreate from "./polls/PollCreate";
 import Settings from "./app/Settings";
-import SolutionCreate from "./posts/SolutionCreate";
+import SolutionCreate from "./solutions/SolutionCreate";
 
 const { Content } = Layout;
 

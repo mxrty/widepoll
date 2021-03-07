@@ -62,7 +62,6 @@ class PostCreate extends React.Component {
                 >
                   <Radio.Button value="DISCUSSION">Discussion</Radio.Button>
                   <Radio.Button value="ISSUE">Issue</Radio.Button>
-                  <Radio.Button value="SOLUTION">Solution</Radio.Button>
                 </Radio.Group>
                 <br />
                 <Button type="primary" htmlType="submit" loading={isSubmitting}>

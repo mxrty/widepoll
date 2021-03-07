@@ -31,6 +31,11 @@ router.get("/:id", async (req, res) => {
       [id]
     );
 
+    solutions.rows.forEach((solution) => {
+      let likes = parseInt(solution.likes);
+      solution.likes = likes;
+    });
+
     res.json(solutions.rows);
   } catch (err) {
     console.error(err.message);
@@ -50,12 +55,12 @@ router.post("/like/:solution_id", async (req, res) => {
 
     if (like.rows.length === 0) {
       const newSolutionLike = await pool.query(
-        "INSERT INTO solution_votes (solution_id, user_id, liked_at) VALUES($1, $2, current_timestamp) RETURNING *",
+        "INSERT INTO solution_votes (solution_id, user_id, voted_at) VALUES($1, $2, current_timestamp) RETURNING *",
         [solution_id, user_id]
       );
       res.json(newSolutionLike.rows[0]);
     } else {
-      res.json("Solution has already been liked by the user");
+      res.status(404).send("Solution has already been liked by the user");
     }
   } catch (err) {
     console.error(err.message);

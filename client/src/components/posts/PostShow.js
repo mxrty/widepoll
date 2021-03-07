@@ -4,7 +4,7 @@ import { Card, Row, Col } from "antd";
 
 import { fetchPost } from "../../actions";
 import PostComments from "./PostComments";
-import SolutionList from "./SolutionList";
+import SolutionList from "../solutions/SolutionList";
 import DomainBlurb from "../domains/DomainBlurb";
 
 const PostShow = (props) => {
@@ -56,7 +56,8 @@ const PostShow = (props) => {
         </Col>
       </Row>
     );
-  } else if (props.post.post_type === "SOLUTION") {
+  } else {
+    return null;
   }
 };
 

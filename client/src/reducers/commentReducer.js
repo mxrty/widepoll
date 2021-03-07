@@ -1,4 +1,3 @@
-import _ from "lodash";
 import produce from "immer";
 import {
   CREATE_COMMENT,
@@ -11,11 +10,7 @@ const assignChildren = (comments) => {
   for (let [key, comment] of Object.entries(comments)) {
     const parent = comments[comment.parent_id];
     if (parent) {
-      if (!parent.children) {
-        parent.children = [];
-      }
       if (comment.comment_type === "REPLY") {
-        //check if exists
         parent.children.push(comment.comment_id);
       }
     }
@@ -32,15 +27,24 @@ export default produce((draft, action = {}) => {
         draft[action.payload.post_id] = {};
       }
       draft[action.payload.post_id][action.payload.comment_id] = action.payload;
-      //init children and add if required
+      draft[action.payload.post_id][action.payload.comment_id].children = [];
+      if (action.payload.comment_type === "REPLY") {
+        draft[action.payload.post_id][action.payload.parent_id].children.push(
+          action.payload.comment_id
+        );
+      }
       return;
     case FETCH_COMMENTS:
-      const postId = draft[action.payload[0].post_id];
+      if (!action.payload[0]) {
+        return;
+      }
+      const postId = action.payload[0].post_id;
       if (!draft[postId]) {
         draft[postId] = {};
       }
       action.payload.forEach((comment) => {
-        draft[comment.post_id][comment.comment_id] = comment;
+        draft[postId][comment.comment_id] = comment;
+        draft[postId][comment.comment_id].children = [];
       });
       assignChildren(draft[postId]);
       return;
@@ -51,6 +55,8 @@ export default produce((draft, action = {}) => {
     case UNLIKE_COMMENT:
       draft[action.payload.post_id][action.payload.comment_id].likes =
         draft[action.payload.post_id][action.payload.comment_id].likes - 1;
+      return;
+    default:
       return;
   }
 }, {});

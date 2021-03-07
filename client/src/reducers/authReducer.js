@@ -30,5 +30,7 @@ export default produce((draft, action = {}) => {
       draft.user_email = action.payload.user_email;
       draft.jwt_token = action.payload.jwt_token;
       return;
+    default:
+      return;
   }
 }, INITIAL_STATE);

@@ -1,5 +1,4 @@
 import api from "../apis/api";
-import history from "../history";
 import {
   CREATE_COMMENT,
   FETCH_COMMENTS,

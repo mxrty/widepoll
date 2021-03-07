@@ -31,7 +31,9 @@ const SolutionList = (props) => {
         pagination={{
           pageSize: 10,
         }}
-        renderItem={(solution) => <SolutionListItem solution={solution} />}
+        renderItem={(solution) => (
+          <SolutionListItem solution={solution} key={solution.solution_id} />
+        )}
       />
     );
   };
@@ -45,10 +47,10 @@ const SolutionList = (props) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    isSignedIn: state.auth.isSignedIn,
-    solutions: Object.values(state.posts[ownProps.postId].solutions),
-  };
+  const newProps = { isSignedIn: state.auth.isSignedIn };
+  if (state.solutions[ownProps.postId])
+    newProps.solutions = Object.values(state.solutions[ownProps.postId]);
+  return newProps;
 };
 
 export default connect(mapStateToProps, { fetchSolutions })(SolutionList);

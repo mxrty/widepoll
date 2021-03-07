@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Formik, Field, Form } from "formik";
-import { Input, Button, Space, Alert } from "antd";
+import { Input, Button, Alert } from "antd";
 import * as Yup from "yup";
 
 import { createComment } from "../../actions";

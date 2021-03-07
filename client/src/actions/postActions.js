@@ -6,6 +6,8 @@ import {
   FETCH_POSTS,
   EDIT_POST,
   DELETE_POST,
+  LIKE_POST,
+  UNLIKE_POST,
 } from "./types";
 
 export const createPost = (formValues) => async (dispatch, getState) => {
@@ -62,4 +64,42 @@ export const editPost = (id, formValues) => async (dispatch, getState) => {
 export const deletePost = (id) => async (dispatch) => {
   await api.delete(`/posts/${id}`);
   dispatch({ type: DELETE_POST, payload: id });
+};
+
+export const likePost = (postId) => async (dispatch, getState) => {
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.post(
+    `/posts/like/${postId}`,
+    {
+      user_id,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
+
+  if (response.status === 200) {
+    dispatch({ type: LIKE_POST, payload: response.data });
+  }
+};
+
+export const unlikePost = (postId) => async (dispatch, getState) => {
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.post(
+    `/posts/unlike/${postId}`,
+    {
+      user_id,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
+  if (response.status === 200) {
+    const payload = { ...response.data, post_id: postId };
+    dispatch({ type: UNLIKE_POST, payload: payload });
+  }
 };

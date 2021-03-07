@@ -3,6 +3,8 @@ export const FETCH_POST = "FETCH_POST";
 export const FETCH_POSTS = "FETCH_POSTS";
 export const EDIT_POST = "EDIT_POST";
 export const DELETE_POST = "DELETE_POST";
+export const LIKE_POST = "LIKE_POST";
+export const UNLIKE_POST = "UNLIKE_POST";
 
 export const CREATE_DOMAIN = "CREATE_DOMAIN";
 export const FETCH_DOMAIN = "FETCH_DOMAIN";
@@ -20,3 +22,5 @@ export const UNLIKE_COMMENT = "UNLIKE_COMMENT";
 
 export const CREATE_SOLUTION = "CREATE_SOLUTION";
 export const FETCH_SOLUTIONS = "FETCH_SOLUTIONS";
+export const LIKE_SOLUTION = "LIKE_SOLUTION";
+export const UNLIKE_SOLUTION = "UNLIKE_SOLUTION";
