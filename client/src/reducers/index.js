@@ -4,11 +4,15 @@ import postReducer from "./postReducer";
 import authReducer from "./authReducer";
 import commentReducer from "./commentReducer";
 import solutionReducer from "./solutionReducer";
+import pollReducer from "./pollReducer";
+import userReducer from "./userReducer";
 
 export default combineReducers({
-  posts: postReducer,
-  domains: domainReducer,
   auth: authReducer,
   comments: commentReducer,
+  domains: domainReducer,
+  polls: pollReducer,
+  posts: postReducer,
   solutions: solutionReducer,
+  users: userReducer,
 });

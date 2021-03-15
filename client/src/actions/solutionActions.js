@@ -35,11 +35,12 @@ export const likeSolution = (issueId, solutionId) => async (
   dispatch,
   getState
 ) => {
-  const { jwt_token, user_id } = getState().auth;
+  const { jwt_token, user_id, isRep } = getState().auth;
   const response = await api.post(
     `/solutions/like/${solutionId}`,
     {
       user_id,
+      isRep,
     },
     {
       headers: {
@@ -62,11 +63,12 @@ export const unlikeSolution = (issueId, solutionId) => async (
   dispatch,
   getState
 ) => {
-  const { jwt_token, user_id } = getState().auth;
+  const { jwt_token, user_id, isRep } = getState().auth;
   const response = await api.post(
     `/solutions/unlike/${solutionId}`,
     {
       user_id,
+      isRep,
     },
     {
       headers: {

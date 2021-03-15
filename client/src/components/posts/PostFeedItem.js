@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { List, Skeleton, Row, Col } from "antd";
 import { LikeOutlined, LikeFilled } from "@ant-design/icons";
 import { likePost, unlikePost } from "../../actions";
+import TimeAgo from "timeago-react";
 
 const PostFeedItem = (props) => {
   const [action, setAction] = useState(null);
@@ -38,6 +39,7 @@ const PostFeedItem = (props) => {
               }
               description={props.post.post_body}
             />
+            <TimeAgo datetime={props.post.created_at} />
           </List.Item>
         </Link>
       </Col>

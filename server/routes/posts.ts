@@ -83,7 +83,7 @@ router.get("/latest/:num", async (req, res) => {
 router.post("/like/:post_id", async (req, res) => {
   try {
     const { post_id } = req.params;
-    const { user_id } = req.body;
+    const { user_id, isRep } = req.body;
 
     const like = await pool.query(
       "SELECT * FROM post_votes WHERE post_id = $1 AND user_id = $2",
@@ -108,7 +108,7 @@ router.post("/like/:post_id", async (req, res) => {
 router.post("/unlike/:post_id", async (req, res) => {
   try {
     const { post_id } = req.params;
-    const { user_id } = req.body;
+    const { user_id, isRep } = req.body;
 
     const unlike = await pool.query(
       "DELETE FROM post_votes WHERE post_id = $1 AND user_id = $2",

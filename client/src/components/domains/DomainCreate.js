@@ -23,7 +23,7 @@ const DomainCreate = (props) => {
           }}
           onSubmit={(data, { setSubmitting }) => {
             setSubmitting(true);
-            this.props.createDomain(data);
+            props.createDomain(data);
             setSubmitting(false);
           }}
           validationSchema={validationSchema}

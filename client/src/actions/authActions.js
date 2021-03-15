@@ -1,6 +1,13 @@
 import api from "../apis/api";
 import history from "../history";
-import { SIGN_IN, SIGN_OUT, REGISTER } from "./types";
+import {
+  SIGN_IN,
+  SIGN_OUT,
+  REGISTER,
+  BECOME_REP,
+  FETCH_USER,
+  FOLLOW_REP,
+} from "./types";
 
 export const signIn = (formValues) => async (dispatch) => {
   const response = await api.post("/auth/login", {
@@ -18,8 +25,48 @@ export const register = (formValues) => async (dispatch) => {
   history.push("/");
 };
 
-export const signOut = () => {
-  return {
+export const signOut = () => (dispatch) => {
+  dispatch({
     type: SIGN_OUT,
-  };
+    payload: "Signed out",
+  });
+};
+
+export const becomeRep = () => async (dispatch, getState) => {
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.post(
+    "/reps",
+    {
+      user_id,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
+  dispatch({ type: BECOME_REP, payload: response.data });
+};
+
+export const followRep = (repId, optIn) => async (dispatch, getState) => {
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.post(
+    "/reps/follow",
+    {
+      user_id,
+      rep_id: repId,
+      optIn,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
+  dispatch({ type: FOLLOW_REP, payload: response.data });
+};
+
+export const fetchUser = (userId) => async (dispatch) => {
+  const response = await api.get(`/auth/user/${userId}`);
+  dispatch({ type: FETCH_USER, payload: response.data });
 };

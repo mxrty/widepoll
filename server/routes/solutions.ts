@@ -5,7 +5,7 @@ import authorise from "../middleware/authorise";
 
 const router: express.Router = express.Router();
 
-//POSTS
+//SOLUTIONS
 
 //create a solution
 router.post("/", authorise, async (req, res) => {
@@ -42,11 +42,11 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//create a new like for a comment
+//create a new like for a solution
 router.post("/like/:solution_id", async (req, res) => {
   try {
     const { solution_id } = req.params;
-    const { user_id } = req.body;
+    const { user_id, isRep } = req.body;
 
     const like = await pool.query(
       "SELECT * FROM solution_votes WHERE solution_id = $1 AND user_id = $2",
@@ -67,11 +67,11 @@ router.post("/like/:solution_id", async (req, res) => {
   }
 });
 
-//removes a like for a comment
+//removes a like for a solution
 router.post("/unlike/:solution_id", async (req, res) => {
   try {
     const { solution_id } = req.params;
-    const { user_id } = req.body;
+    const { user_id, isRep } = req.body;
 
     const unlike = await pool.query(
       "DELETE FROM solution_votes WHERE solution_id = $1 AND user_id = $2",

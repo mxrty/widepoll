@@ -12,6 +12,8 @@ const validationSchema = Yup.object({
 });
 
 const Login = (props) => {
+  console.log(`isSignedIn: ${props.isSignedIn}`);
+
   if (!props.isSignedIn) {
     return (
       <div>

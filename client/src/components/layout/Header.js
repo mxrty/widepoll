@@ -31,9 +31,12 @@ const Header = (props) => {
             justifyContent: "space-between",
           }}
         >
-          <div style={{ color: "white", padding: "12px" }}>
+          <Link
+            style={{ color: "white", padding: "12px" }}
+            to={`/user/${props.userId}`}
+          >
             Hello {props.userName}
-          </div>
+          </Link>
           <a
             onClick={() => {
               props.signOut();
@@ -75,6 +78,7 @@ const Header = (props) => {
 const mapStateToProps = (state) => {
   return {
     userName: state.auth.user_name,
+    userId: state.auth.user_id,
     isSignedIn: state.auth.isSignedIn,
   };
 };

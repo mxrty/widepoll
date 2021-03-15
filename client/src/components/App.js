@@ -17,10 +17,14 @@ import Footer from "./layout/Footer";
 import SideMenu from "./layout/SideMenu";
 import DomainHome from "./domains/DomainHome";
 import Search from "./app/Search";
-import Explore from "./app/Explore";
+
 import PollCreate from "./polls/PollCreate";
 import Settings from "./app/Settings";
 import SolutionCreate from "./solutions/SolutionCreate";
+import PollShow from "./polls/PollShow";
+import PollResults from "./polls/PollResults";
+import UserProfile from "./accounts/UserProfile";
+import DomainList from "./domains/DomainList";
 
 const { Content } = Layout;
 
@@ -41,15 +45,24 @@ const App = () => {
                 <Route path="/showcase" exact component={Showcase} />
                 <Route path="/login" exact component={Login} />
                 <Route path="/register" exact component={Register} />
+                <Route path="/user/:userId" exact component={UserProfile} />
 
                 <Route path="/search" exact component={Search} />
-                <Route path="/explore" exact component={Explore} />
-                <Route path="/poll" exact component={PollCreate} />
+                <Route path="/explore" exact component={DomainList} />
                 <Route path="/settings" exact component={Settings} />
+
+                <Route path="/polls/new" exact component={PollCreate} />
+                <Route path="/polls/:pollId" exact component={PollShow} />
+                <Route
+                  path="/polls/:pollId/results"
+                  exact
+                  component={PollResults}
+                />
 
                 <Route path="/d/new" exact component={DomainCreate} />
                 <Route path="/d/:domain" exact component={DomainHome} />
                 <Route path="/d/:domain/edit" exact component={DomainEdit} />
+
                 <Route
                   path="/d/:domain/posts/new"
                   exact

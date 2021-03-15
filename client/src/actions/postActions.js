@@ -67,11 +67,12 @@ export const deletePost = (id) => async (dispatch) => {
 };
 
 export const likePost = (postId) => async (dispatch, getState) => {
-  const { jwt_token, user_id } = getState().auth;
+  const { jwt_token, user_id, isRep } = getState().auth;
   const response = await api.post(
     `/posts/like/${postId}`,
     {
       user_id,
+      isRep,
     },
     {
       headers: {
@@ -86,11 +87,12 @@ export const likePost = (postId) => async (dispatch, getState) => {
 };
 
 export const unlikePost = (postId) => async (dispatch, getState) => {
-  const { jwt_token, user_id } = getState().auth;
+  const { jwt_token, user_id, isRep } = getState().auth;
   const response = await api.post(
     `/posts/unlike/${postId}`,
     {
       user_id,
+      isRep,
     },
     {
       headers: {

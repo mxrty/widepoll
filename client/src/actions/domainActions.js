@@ -5,6 +5,7 @@ import {
   FETCH_DOMAIN,
   EDIT_DOMAIN,
   DELETE_DOMAIN,
+  FETCH_DOMAINS,
 } from "./types";
 
 export const createDomain = (formValues) => async (dispatch, getState) => {
@@ -22,12 +23,17 @@ export const createDomain = (formValues) => async (dispatch, getState) => {
     }
   );
   dispatch({ type: CREATE_DOMAIN, payload: response.data });
-  history.goBack();
+  history.push("/");
 };
 
 export const fetchDomain = (domain) => async (dispatch) => {
   const response = await api.get(`/domains/${domain}`);
   dispatch({ type: FETCH_DOMAIN, payload: response.data });
+};
+
+export const fetchDomains = () => async (dispatch) => {
+  const response = await api.get(`/domains`);
+  dispatch({ type: FETCH_DOMAINS, payload: response.data });
 };
 
 export const editDomain = (domain, formValues) => async (

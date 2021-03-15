@@ -16,7 +16,7 @@ const SideMenu = () => {
         </Link>
       </Row>
       <Row>
-        <Link to="/poll">
+        <Link to="/polls/new">
           <h2>Poll</h2>
         </Link>
       </Row>

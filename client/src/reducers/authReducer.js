@@ -1,8 +1,9 @@
 import produce from "immer";
-import { REGISTER, SIGN_IN, SIGN_OUT } from "../actions/types";
+import { REGISTER, SIGN_IN, SIGN_OUT, BECOME_REP } from "../actions/types";
 
 const INITIAL_STATE = {
   isSignedIn: false,
+  isRep: false,
   user_id: null,
   user_name: null,
   user_email: null,
@@ -20,6 +21,7 @@ export default produce((draft, action = {}) => {
       draft.user_name = action.payload.user_name;
       draft.user_email = action.payload.user_email;
       draft.jwt_token = action.payload.jwt_token;
+      draft.isRep = action.payload.isRep;
       return;
     case SIGN_OUT:
       return INITIAL_STATE;
@@ -29,6 +31,10 @@ export default produce((draft, action = {}) => {
       draft.user_name = action.payload.user_name;
       draft.user_email = action.payload.user_email;
       draft.jwt_token = action.payload.jwt_token;
+      draft.isRep = action.payload.isRep;
+      return;
+    case BECOME_REP:
+      draft.isRep = action.payload;
       return;
     default:
       return;

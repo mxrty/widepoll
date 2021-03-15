@@ -1,7 +1,38 @@
 import React from "react";
+import { connect } from "react-redux";
+import { Card, Button } from "antd";
 
-const Settings = () => {
-  return <div>Settings</div>;
+import { becomeRep } from "../../actions";
+
+const Settings = (props) => {
+  const renderRep = () => {
+    if (props.isSignedIn && !props.isRep) {
+      return (
+        <Button
+          type="primary"
+          danger
+          onClick={() => {
+            props.becomeRep();
+          }}
+        >
+          Become a representative
+        </Button>
+      );
+    }
+  };
+  return (
+    <>
+      <h1>Settings</h1>
+      <Card>{renderRep()}</Card>
+    </>
+  );
 };
 
-export default Settings;
+const mapStateToProps = (state) => {
+  return {
+    isSignedIn: state.auth.isSignedIn,
+    isRep: state.auth.isRep,
+  };
+};
+
+export default connect(mapStateToProps, { becomeRep })(Settings);

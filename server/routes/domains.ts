@@ -35,6 +35,17 @@ router.get("/:domain_id", async (req, res) => {
   }
 });
 
+//get all the domains
+router.get("/", async (req, res) => {
+  try {
+    const domain = await pool.query("SELECT * FROM domains ");
+
+    res.json(domain.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 //update a domain
 router.put("/:domain_id", async (req, res) => {
   try {
