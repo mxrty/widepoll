@@ -10,12 +10,12 @@ const router: express.Router = express.Router();
 //make user a representative
 router.post("/", authorise, async (req, res) => {
   try {
-    const { user_id } = req.body;
-    const changeToRep = await pool.query(
-      "UPDATE USERS SET IS_REPRESENTATIVE = TRUE WHERE USER_ID = $1 ",
-      [user_id]
+    const { user_id, domain } = req.body;
+    const createRep = await pool.query(
+      "INSERT INTO representatives (rep_id, domain, became_rep_at) VALUES ($1, $2, current_timestamp) RETURNING * ",
+      [user_id, domain]
     );
-    res.json(true);
+    res.json({ isRep: true, domain: { domain: domain } });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
@@ -25,17 +25,17 @@ router.post("/", authorise, async (req, res) => {
 //follow a representative
 router.post("/follow", authorise, async (req, res) => {
   try {
-    const { user_id, rep_id, optIn } = req.body;
+    const { user_id, domain, rep_id, optIn } = req.body;
 
     const existingFollow = await pool.query(
-      "SELECT * FROM REP_FOLLOWERS WHERE REP_ID = $1 AND FOLLOWER_ID = $2",
-      [rep_id, user_id]
+      "SELECT * FROM REP_FOLLOWERS WHERE REP_ID = $1 AND FOLLOWER_ID = $2 AND DOMAIN = $3",
+      [rep_id, user_id, domain]
     );
 
     if (existingFollow.rows.length === 0) {
       const largestRank = await pool.query(
-        "SELECT MAX(RANK) FROM REP_FOLLOWERS WHERE FOLLOWER_ID = $1",
-        [user_id]
+        "SELECT MAX(RANK) FROM REP_FOLLOWERS WHERE FOLLOWER_ID = $1 AND DOMAIN = $2",
+        [user_id, domain]
       );
 
       const nextRank =
@@ -44,8 +44,8 @@ router.post("/follow", authorise, async (req, res) => {
           : parseInt(largestRank.rows[0].max) + 1;
 
       const followRep = await pool.query(
-        "INSERT INTO rep_followers (rep_id, follower_id, followed_at, rank, opt_in) VALUES($1, $2, current_timestamp, $3, $4) RETURNING *",
-        [rep_id, user_id, nextRank, optIn]
+        "INSERT INTO rep_followers (rep_id, follower_id, followed_at, rank, opt_in, domain) VALUES($1, $2, current_timestamp, $3, $4, $5) RETURNING *",
+        [rep_id, user_id, nextRank, optIn, domain]
       );
 
       res.json(followRep.rows[0]);

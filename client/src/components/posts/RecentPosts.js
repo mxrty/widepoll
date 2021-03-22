@@ -25,7 +25,7 @@ const RecentPosts = (props) => {
   return (
     <List
       size="small"
-      header={<div>Recent Posts</div>}
+      header={<strong>Recent Posts</strong>}
       itemLayout="horizontal"
       dataSource={props.posts}
       bordered

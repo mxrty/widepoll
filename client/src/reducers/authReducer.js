@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   user_name: null,
   user_email: null,
   jwt_token: null,
+  domainsRepresented: [],
 };
 
 export default produce((draft, action = {}) => {
@@ -22,6 +23,7 @@ export default produce((draft, action = {}) => {
       draft.user_email = action.payload.user_email;
       draft.jwt_token = action.payload.jwt_token;
       draft.isRep = action.payload.isRep;
+      draft.domainsRepresented = action.payload.domainsRepresented;
       return;
     case SIGN_OUT:
       return INITIAL_STATE;
@@ -34,7 +36,8 @@ export default produce((draft, action = {}) => {
       draft.isRep = action.payload.isRep;
       return;
     case BECOME_REP:
-      draft.isRep = action.payload;
+      draft.isRep = action.payload.isRep;
+      draft.domainsRepresented.push(action.payload.domain);
       return;
     default:
       return;

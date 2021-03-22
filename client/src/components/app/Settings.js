@@ -20,10 +20,11 @@ const Settings = (props) => {
       );
     }
   };
+
   return (
     <>
       <h1>Settings</h1>
-      <Card>{renderRep()}</Card>
+      {/* <Card>{renderRep()}</Card> */}
     </>
   );
 };

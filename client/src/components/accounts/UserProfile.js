@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { fetchUser, followRep } from "../../actions";
 import { Avatar, Skeleton, Row, Col, Card, Button, Modal, Space } from "antd";
 import { UserOutlined } from "@ant-design/icons";
@@ -16,7 +17,7 @@ const UserProfile = (props) => {
       return (
         <Card title="Followers">
           {props.user.followers.map((follower) => {
-            return <div>{follower.follower_id}</div>;
+            return <div key={follower.follower_id}>{follower.follower_id}</div>;
           })}
         </Card>
       );
@@ -27,17 +28,19 @@ const UserProfile = (props) => {
       return (
         <Card title="Following">
           {props.user.following.map((rep) => {
-            return <div>{rep.rep_id}</div>;
+            return <div key={rep.rep_id}>{rep.rep_id}</div>;
           })}
         </Card>
       );
   };
 
-  const renderFollowButton = () => {
-    if (props.user.user_id !== props.currentUserId) {
-      // AND not already following
+  const renderDomainsRepresented = () => {
+    //if (props.user.user_id !== props.currentUserId) {
+    // AND not already following
+    return props.user.domainsRepresented.map((domain) => {
       return (
-        <>
+        <Space>
+          <Link to={`/d/${domain.domain}`}>{`/d/${domain.domain}`}</Link>
           <Button
             type="primary"
             onClick={() => {
@@ -75,19 +78,21 @@ const UserProfile = (props) => {
               </Button>
             </Space>
           </Modal>
-        </>
+        </Space>
       );
-    }
+    });
+    //}
   };
 
   const renderRepSection = () => {
     if (props.user.isRep) {
       return (
-        <Card title={`${props.user.user_name} is a representative.`}>
+        <Card
+          title={`${props.user.user_name} is a representative in the following domains:`}
+        >
           <Space direction="vertical" style={{ width: "100%" }}>
-            {renderFollowButton()}
+            {renderDomainsRepresented()}
             {renderFollowers()}
-            {renderFollowing()}
             <ul>
               <li>Recent Votes/Activity</li>
             </ul>
@@ -109,11 +114,12 @@ const UserProfile = (props) => {
             <Skeleton />
           </Col>
         </Row>
+        {renderFollowing()}
         {renderRepSection()}
       </div>
     );
   }
-  return null;
+  return <div data-testid="default">No user for this id.</div>;
 };
 
 const mapStateToProps = (state, ownProps) => {

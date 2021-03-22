@@ -23,7 +23,7 @@ export const createDomain = (formValues) => async (dispatch, getState) => {
     }
   );
   dispatch({ type: CREATE_DOMAIN, payload: response.data });
-  history.push("/");
+  history.push(`/d/${response.data.domain_name}`);
 };
 
 export const fetchDomain = (domain) => async (dispatch) => {

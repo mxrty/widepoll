@@ -32,12 +32,13 @@ export const signOut = () => (dispatch) => {
   });
 };
 
-export const becomeRep = () => async (dispatch, getState) => {
+export const becomeRep = (domain) => async (dispatch, getState) => {
   const { jwt_token, user_id } = getState().auth;
   const response = await api.post(
     "/reps",
     {
       user_id,
+      domain,
     },
     {
       headers: {
@@ -67,6 +68,6 @@ export const followRep = (repId, optIn) => async (dispatch, getState) => {
 };
 
 export const fetchUser = (userId) => async (dispatch) => {
-  const response = await api.get(`/auth/user/${userId}`);
+  const response = await api.get(`/users/${userId}`);
   dispatch({ type: FETCH_USER, payload: response.data });
 };

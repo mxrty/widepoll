@@ -7,13 +7,11 @@ import * as Yup from "yup";
 import { signIn } from "../../actions";
 
 const validationSchema = Yup.object({
-  email: Yup.string(),
-  password: Yup.string(),
+  email: Yup.string().required(),
+  password: Yup.string().required(),
 });
 
 const Login = (props) => {
-  console.log(`isSignedIn: ${props.isSignedIn}`);
-
   if (!props.isSignedIn) {
     return (
       <div>
@@ -30,18 +28,28 @@ const Login = (props) => {
           }}
           validationSchema={validationSchema}
         >
-          {({ values, isSubmitting, handleChange, errors, touched }) => (
+          {({ values, isSubmitting, errors, touched }) => (
             <Form>
               <Space size="8" direction="vertical" style={{ width: "60%" }}>
                 <label>Email</label>
                 <Field name="email" as={Input} placeholder="Email" />
                 {errors.email && touched.email ? (
-                  <Alert message={errors.email} type="error" showIcon />
+                  <Alert
+                    message={errors.email}
+                    type="error"
+                    showIcon
+                    data-testid="emailError"
+                  />
                 ) : null}
                 <label>Password</label>
                 <Field name="password" as={Input} placeholder="Password" />
                 {errors.password && touched.password ? (
-                  <Alert message={errors.password} type="error" showIcon />
+                  <Alert
+                    message={errors.password}
+                    type="error"
+                    showIcon
+                    data-testid="passwordError"
+                  />
                 ) : null}
                 <Button type="primary" htmlType="submit" loading={isSubmitting}>
                   Sign In

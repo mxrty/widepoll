@@ -8,10 +8,10 @@ const router: express.Router = express.Router();
 //create a domain
 router.post("/", async (req, res) => {
   try {
-    const { domainName, description, owner } = req.body;
+    const { domainName, description, user_id } = req.body;
     const newDomain = await pool.query(
       "INSERT INTO domains (domain_name, description, owner, created_at) VALUES($1, $2, $3, current_timestamp) RETURNING *",
-      [domainName, description, owner]
+      [domainName, description, user_id]
     );
 
     res.json(newDomain.rows[0]);

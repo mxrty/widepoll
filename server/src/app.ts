@@ -7,6 +7,7 @@ import commentRoutes from "../routes/comments";
 import solutionRoutes from "../routes/solutions";
 import pollRoutes from "../routes/polls";
 import repRoutes from "../routes/representatives";
+import userRoutes from "../routes/users";
 
 const app: express.Application = express();
 
@@ -22,6 +23,7 @@ app.use("/comments", commentRoutes);
 app.use("/solutions", solutionRoutes);
 app.use("/polls", pollRoutes);
 app.use("/reps", repRoutes);
+app.use("/users", userRoutes);
 
 app.listen(5000, () => {
   console.log("server has started on port 5000");

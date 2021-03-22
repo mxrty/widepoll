@@ -31,9 +31,17 @@ const { Content } = Layout;
 const App = () => {
   return (
     <Router history={history}>
-      <Layout>
+      <Layout style={{ minHeight: "100%", position: "relative" }}>
         <Header />
-        <Content style={{ padding: "0 50px", marginTop: 64 }}>
+        <Content
+          style={{
+            padding: "0 50px",
+            marginTop: 64,
+            width: "100%",
+            paddingBottom: "60px",
+            height: "100%",
+          }}
+        >
           <Row>
             <Col span={3} style={{ padding: "5px" }}>
               <SideMenu />

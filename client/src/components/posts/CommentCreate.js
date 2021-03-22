@@ -37,7 +37,7 @@ const CommentCreate = (props) => {
               <Field
                 name="comment"
                 as={Input}
-                placeholder="Comment"
+                placeholder="Reply"
                 autoComplete="off"
               />
               {errors.comment && touched.comment ? (

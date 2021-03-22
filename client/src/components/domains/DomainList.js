@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { Card } from "antd";
+import { Link } from "react-router-dom";
+import { Card, Space } from "antd";
 import { fetchDomains } from "../../actions";
 
 const DomainList = (props) => {
@@ -11,14 +12,18 @@ const DomainList = (props) => {
   const renderDomains = () => {
     if (props.domains) {
       return Object.entries(props.domains).map(([key, value]) => {
-        return <Card key={key}>{value.domain_name}</Card>;
+        return (
+          <Link key={key} to={`/d/${value.domain_name}`}>
+            {`/d/${value.domain_name}`}
+          </Link>
+        );
       });
     }
   };
 
   return (
     <Card type="inner" title="Domains">
-      {renderDomains()}
+      <Space direction="vertical">{renderDomains()}</Space>
     </Card>
   );
 };

@@ -5,15 +5,36 @@ import { Row, Col, Button } from "antd";
 
 import PostFeed from "../posts/PostFeed";
 import DomainBlurb from "../domains/DomainBlurb";
+import { becomeRep } from "../../actions";
 
 const DomainHome = (props) => {
   const renderCreate = () => {
     if (props.isSignedIn) {
-      const domain = props.match.params.domain;
       return (
-        <Link to={`/d/${domain}/posts/new`}>
+        <Link to={`/d/${props.match.params.domain}/posts/new`}>
           <Button>Create Post</Button>
         </Link>
+      );
+    }
+  };
+
+  const renderRep = () => {
+    if (
+      props.isSignedIn &&
+      !props.domainsRepresented.some(
+        (domain) => domain.domain === props.match.params.domain
+      )
+    ) {
+      return (
+        <Button
+          type="primary"
+          danger
+          onClick={() => {
+            props.becomeRep(props.match.params.domain);
+          }}
+        >
+          Become a representative
+        </Button>
       );
     }
   };
@@ -21,18 +42,23 @@ const DomainHome = (props) => {
   return (
     <Row>
       <Col span={18} style={{ padding: "5px" }}>
-        <PostFeed />
+        <PostFeed domainName={props.match.params.domain} />
       </Col>
       <Col span={6} style={{ padding: "5px" }}>
         {renderCreate()}
-        <DomainBlurb domain={props.match.params.domain} />
+        {renderRep()}
+        <DomainBlurb domainName={props.match.params.domain} />
       </Col>
     </Row>
   );
 };
 
 const mapStateToProps = (state) => {
-  return { isSignedIn: state.auth.isSignedIn };
+  return {
+    isSignedIn: state.auth.isSignedIn,
+    isRep: state.auth.isRep,
+    domainsRepresented: state.auth.domainsRepresented,
+  };
 };
 
-export default connect(mapStateToProps, null)(DomainHome);
+export default connect(mapStateToProps, { becomeRep })(DomainHome);
