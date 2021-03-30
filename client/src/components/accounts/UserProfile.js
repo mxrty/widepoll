@@ -1,101 +1,194 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchUser, followRep } from "../../actions";
-import { Avatar, Skeleton, Row, Col, Card, Button, Modal, Space } from "antd";
+import { fetchUser } from "../../actions";
+import {
+  Avatar,
+  Skeleton,
+  Row,
+  Col,
+  Card,
+  Button,
+  Modal,
+  Space,
+  Tabs,
+} from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import DomainRepresentedItem from "./DomainRepresentedItem";
+
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
+import _ from "lodash";
 
 const UserProfile = (props) => {
+  const [repRanking, setRepRanking] = useState({});
+
   useEffect(() => {
     props.fetchUser(props.match.params.userId);
   }, []);
 
-  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (props.user) {
+      setRepRanking(props.user.following);
+    }
+  }, [props.user]);
 
   const renderFollowers = () => {
     if (props.user.followers.length > 0)
       return (
-        <Card title="Followers">
+        <>
+          <h3>Followers</h3>
           {props.user.followers.map((follower) => {
-            return <div key={follower.follower_id}>{follower.follower_id}</div>;
+            return <div key={follower.follower_id}>{follower.user_name}</div>;
           })}
-        </Card>
+        </>
       );
+  };
+
+  const renderUpdateRankingButton = () => {
+    if (!_.isEqual(props.user.following, repRanking)) {
+      return <Button>Update</Button>;
+    }
+  };
+
+  const { TabPane } = Tabs;
+
+  const onDragEnd = (result) => {
+    if (!result) return;
+    if (!result.destination) return;
+
+    const domain = result.destination.droppableId;
+    const from = result.source.index;
+    const to = result.destination.index;
+
+    // Clone current ranking
+    const newRepRanking = _.cloneDeep(repRanking);
+
+    const items = newRepRanking[domain];
+
+    // Swap ranking
+    const rankFrom = items[from].rank;
+    const rankTo = items[to].rank;
+    items[from].rank = rankTo;
+    items[to].rank = rankFrom;
+
+    // Sort by rank
+    items.sort((a, b) => {
+      return a.rank - b.rank;
+    });
+
+    newRepRanking[domain] = items;
+
+    setRepRanking(newRepRanking);
   };
 
   const renderFollowing = () => {
-    if (props.user.following.length > 0)
-      return (
-        <Card title="Following">
-          {props.user.following.map((rep) => {
-            return <div key={rep.rep_id}>{rep.rep_id}</div>;
-          })}
-        </Card>
-      );
+    if (_.size(props.user.following) > 0)
+      if (props.user.user_id !== props.currentUserId) {
+        return (
+          <Card title="Following">
+            <Tabs
+              defaultActiveKey="1"
+              tabPosition="left"
+              style={{ maxHeight: 300 }}
+            >
+              {Object.keys(repRanking).map((domain) => (
+                <TabPane tab={`/d/${domain}`} key={domain}>
+                  <div>
+                    {repRanking[domain].map((rep, index) => {
+                      return (
+                        <div>
+                          <Card>
+                            {rep.rank + 1} : {rep.user_name}
+                          </Card>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </TabPane>
+              ))}
+            </Tabs>
+          </Card>
+        );
+      } else {
+        return (
+          <Card title="Following">
+            <Tabs
+              defaultActiveKey="1"
+              tabPosition="left"
+              style={{ maxHeight: 300 }}
+            >
+              {Object.keys(repRanking).map((domain) => (
+                <TabPane tab={`/d/${domain}`} key={domain}>
+                  <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId={domain}>
+                      {(provided) => (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                        >
+                          {repRanking[domain].map((rep, index) => (
+                            <Draggable
+                              key={rep.rep_id}
+                              draggableId={`${rep.rep_id}`}
+                              index={index}
+                            >
+                              {(provided) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                >
+                                  <Card>
+                                    {rep.rank + 1} : {rep.user_name}
+                                  </Card>
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+                </TabPane>
+              ))}
+            </Tabs>
+            {renderUpdateRankingButton()}
+          </Card>
+        );
+      }
   };
 
   const renderDomainsRepresented = () => {
-    //if (props.user.user_id !== props.currentUserId) {
-    // AND not already following
-    return props.user.domainsRepresented.map((domain) => {
-      return (
-        <Space>
-          <Link to={`/d/${domain.domain}`}>{`/d/${domain.domain}`}</Link>
-          <Button
-            type="primary"
-            onClick={() => {
-              if (props.isSignedIn) {
-                setVisible(true);
-              }
-            }}
-          >
-            + Follow
-          </Button>
-          <Modal
-            title="Choose how you want to follow"
-            visible={visible}
-            onCancel={() => {
-              setVisible(false);
-            }}
-            footer={null}
-          >
-            <Space>
-              <Button
-                type="primary"
-                onClick={() => {
-                  props.followRep(props.user.user_id, true);
-                }}
-              >
-                Opt-in
-              </Button>
-              <Button
-                type="primary"
-                onClick={() => {
-                  props.followRep(props.user.user_id, false);
-                }}
-              >
-                Opt-out
-              </Button>
-            </Space>
-          </Modal>
-        </Space>
-      );
-    });
-    //}
+    return (
+      <>
+        <h3>Domains represented</h3>
+        {props.user.domainsRepresented.map((domain) => {
+          //followers for each domain
+          const canFollow =
+            props.user.user_id !== props.currentUserId &&
+            !props.user.followers.includes(props.currentUserId);
+
+          return (
+            <DomainRepresentedItem
+              userId={props.user.user_id}
+              domain={domain.domain}
+              disabled={!canFollow}
+            />
+          );
+        })}
+      </>
+    );
   };
 
   const renderRepSection = () => {
     if (props.user.isRep) {
       return (
-        <Card
-          title={`${props.user.user_name} is a representative in the following domains:`}
-        >
+        <Card title={`${props.user.user_name} is a representative`}>
           <Space direction="vertical" style={{ width: "100%" }}>
             {renderDomainsRepresented()}
             {renderFollowers()}
-            <ul>
-              <li>Recent Votes/Activity</li>
-            </ul>
           </Space>
         </Card>
       );
@@ -116,6 +209,9 @@ const UserProfile = (props) => {
         </Row>
         {renderFollowing()}
         {renderRepSection()}
+        <ul>
+          <li>Recent Votes/Activity</li>
+        </ul>
       </div>
     );
   }
@@ -130,4 +226,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, { fetchUser, followRep })(UserProfile);
+export default connect(mapStateToProps, { fetchUser })(UserProfile);

@@ -49,7 +49,10 @@ export const becomeRep = (domain) => async (dispatch, getState) => {
   dispatch({ type: BECOME_REP, payload: response.data });
 };
 
-export const followRep = (repId, optIn) => async (dispatch, getState) => {
+export const followRep = (repId, optIn, domain) => async (
+  dispatch,
+  getState
+) => {
   const { jwt_token, user_id } = getState().auth;
   const response = await api.post(
     "/reps/follow",
@@ -57,6 +60,7 @@ export const followRep = (repId, optIn) => async (dispatch, getState) => {
       user_id,
       rep_id: repId,
       optIn,
+      domain,
     },
     {
       headers: {

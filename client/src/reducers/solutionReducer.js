@@ -28,11 +28,11 @@ export default produce((draft, action = {}) => {
       return;
     case LIKE_SOLUTION:
       draft[action.payload.issue_id][action.payload.solution_id].likes =
-        draft[action.payload.issue_id][action.payload.solution_id].likes + 1;
+        action.payload.likes;
       return;
     case UNLIKE_SOLUTION:
       draft[action.payload.issue_id][action.payload.solution_id].likes =
-        draft[action.payload.issue_id][action.payload.solution_id].likes - 1;
+        action.payload.likes;
       return;
     default:
       return;

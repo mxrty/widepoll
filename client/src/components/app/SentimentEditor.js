@@ -4,6 +4,7 @@ import { Slate, Editable, ReactEditor, withReact, useSlate } from "slate-react";
 import { Editor, Transforms, Text, createEditor, Range } from "slate";
 import { css, cx } from "@emotion/css";
 import { withHistory } from "slate-history";
+import _ from "lodash";
 
 const Button = React.forwardRef(
   ({ className, active, reversed, ...props }, ref) => (
@@ -49,8 +50,8 @@ const Portal = ({ children }) => {
   return ReactDOM.createPortal(children, document.body);
 };
 
-const SentimentEditor = ({ textValue }) => {
-  const [value, setValue] = useState([
+const SentimentEditor = ({ textValue, onSentimentChange }) => {
+  const INITIAL_VALUE = [
     {
       children: [
         {
@@ -58,15 +59,23 @@ const SentimentEditor = ({ textValue }) => {
         },
       ],
     },
-  ]);
+  ];
+
+  const [value, setValue] = useState(INITIAL_VALUE);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   return (
-    <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
+    <Slate
+      editor={editor}
+      value={value}
+      onChange={(value) => {
+        setValue(value);
+        onSentimentChange(!_.isEqual(value, INITIAL_VALUE));
+      }}
+    >
       <HoveringToolbar />
       <Editable
         renderLeaf={(props) => <Leaf {...props} />}
-        placeholder="Enter some text..."
         onDOMBeforeInput={(event) => {
           event.preventDefault();
         }}

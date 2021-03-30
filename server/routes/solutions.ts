@@ -27,7 +27,7 @@ router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const solutions = await pool.query(
-      "SELECT solutions.*, COALESCE(COUNTS.LIKES,0) as likes FROM (SELECT * FROM SOLUTIONS WHERE ISSUE_ID = $1) AS SOLUTIONS LEFT OUTER JOIN (SELECT SOLUTION_ID, COUNT(*) AS LIKES FROM SOLUTION_VOTES GROUP BY SOLUTION_ID) AS COUNTS ON (SOLUTIONS.SOLUTION_ID = COUNTS.SOLUTION_ID)",
+      "SELECT solutions.*, COALESCE(COUNTS.LIKES,0) as likes FROM (SELECT * FROM SOLUTIONS WHERE ISSUE_ID = $1) AS SOLUTIONS LEFT OUTER JOIN (SELECT ENTITY_ID, COUNT(*) AS LIKES FROM VOTES WHERE ENTITY = 'SOLUTION' GROUP BY ENTITY_ID) AS COUNTS ON (SOLUTIONS.SOLUTION_ID = COUNTS.ENTITY_ID)",
       [id]
     );
 
@@ -49,19 +49,86 @@ router.post("/like/:solution_id", async (req, res) => {
     const { user_id, isRep } = req.body;
 
     const like = await pool.query(
-      "SELECT * FROM solution_votes WHERE solution_id = $1 AND user_id = $2",
+      "SELECT * FROM VOTES WHERE ENTITY_ID = $1 AND USER_ID = $2 AND ENTITY = 'SOLUTION'",
       [solution_id, user_id]
     );
 
-    if (like.rows.length === 0) {
-      const newSolutionLike = await pool.query(
-        "INSERT INTO solution_votes (solution_id, user_id, voted_at) VALUES($1, $2, current_timestamp) RETURNING *",
+    const pendingLike = await pool.query(
+      "SELECT * FROM PENDING_VOTES WHERE ENTITY = 'SOLUTION' AND ENTITY_ID = $1 AND FOLLOWER_ID = $2",
+      [solution_id, user_id]
+    );
+
+    //if pending like exists, remove as will create a new like
+    if (pendingLike.rows.length > 0) {
+      const removePendingLike = await pool.query(
+        "DELETE FROM PENDING_VOTES WHERE ENTITY = 'SOLUTION' AND ENTITY_ID = $1 AND FOLLOWER_ID = $2",
         [solution_id, user_id]
       );
-      res.json(newSolutionLike.rows[0]);
-    } else {
-      res.status(404).send("Solution has already been liked by the user");
     }
+
+    //insert new like, or update to user like from rep like
+    if (like.rows.length === 0) {
+      const newSolutionLike = await pool.query(
+        "INSERT INTO VOTES (entity, entity_id, user_id, voted_at, vote_type) VALUES('SOLUTION', $1, $2, current_timestamp, 'USER') RETURNING *",
+        [solution_id, user_id]
+      );
+    } else if (like.rows[0].vote_type === "REP") {
+      const updateSolutionLike = await pool.query(
+        "UPDATE VOTES SET vote_type = 'USER' WHERE entity_id = $1 AND user_id = $2 AND entity = 'SOLUTION' RETURNING *",
+        [solution_id, user_id]
+      );
+    }
+
+    const followers = await pool.query(
+      "SELECT FOLLOWER_ID, OPT_IN, RANK FROM REP_FOLLOWERS \
+    INNER JOIN POSTS ON POSTS.DOMAIN = REP_FOLLOWERS.DOMAIN \
+    INNER JOIN SOLUTIONS ON POSTS.POST_ID = SOLUTIONS.ISSUE_ID \
+    WHERE SOLUTIONS.SOLUTION_ID = $1 AND REP_FOLLOWERS.REP_ID = $2",
+      [solution_id, user_id]
+    );
+
+    if (followers.rows.length !== 0) {
+      followers.rows.forEach(async (follower) => {
+        const followerLike = await pool.query(
+          "SELECT * FROM VOTES WHERE entity_id = $1 AND user_id = $2 AND entity = 'SOLUTION'",
+          [solution_id, follower.follower_id]
+        );
+
+        const pendingFollowerLike = await pool.query(
+          "SELECT * FROM PENDING_VOTES WHERE ENTITY = 'SOLUTION' AND ENTITY_ID = $1 AND FOLLOWER_ID = $2",
+          [solution_id, follower.follower_id]
+        );
+
+        if (follower.opt_in === true && followerLike.rows.length === 0) {
+          const newSolutionLike = await pool.query(
+            "INSERT INTO VOTES (entity, entity_id, user_id, voted_at, vote_type, rep_id) VALUES('SOLUTION', $1, $2, current_timestamp, 'REP', $3) RETURNING *",
+            [solution_id, follower.follower_id, user_id]
+          );
+          if (pendingFollowerLike.rows.length > 0) {
+            const removePendingLike = await pool.query(
+              "DELETE FROM PENDING_VOTES WHERE ENTITY = 'SOLUTION' AND ENTITY_ID = $1 AND FOLLOWER_ID = $2",
+              [solution_id, follower.follower_id]
+            );
+          }
+        } else if (
+          follower.opt_in === false &&
+          followerLike.rows.length === 0 &&
+          pendingFollowerLike.rows.length === 0
+        ) {
+          const newPendingLike = await pool.query(
+            "INSERT INTO PENDING_VOTES (entity, entity_id, created_at, follower_id, rep_id) VALUES('SOLUTION', $1, current_timestamp, $2, $3) RETURNING *",
+            [solution_id, follower.follower_id, user_id]
+          );
+        }
+      });
+    }
+
+    const updatedLikeCount = await pool.query(
+      "SELECT COUNT(*) AS LIKES FROM VOTES WHERE ENTITY_ID = $1 AND ENTITY = 'SOLUTION'",
+      [solution_id]
+    );
+
+    res.json(updatedLikeCount.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
@@ -74,10 +141,16 @@ router.post("/unlike/:solution_id", async (req, res) => {
     const { user_id, isRep } = req.body;
 
     const unlike = await pool.query(
-      "DELETE FROM solution_votes WHERE solution_id = $1 AND user_id = $2",
+      "DELETE FROM votes WHERE entity_id = $1 AND entity = 'SOLUTION' AND (user_id = $2 OR rep_id = $2)",
       [solution_id, user_id]
     );
-    res.json("Like removed");
+
+    const updatedLikeCount = await pool.query(
+      "SELECT COUNT(*) AS LIKES FROM VOTES WHERE ENTITY_ID = $1 AND ENTITY = 'SOLUTION'",
+      [solution_id]
+    );
+
+    res.json(updatedLikeCount.rows[0]);
   } catch (err) {
     console.error(err.message);
   }

@@ -26,14 +26,26 @@ router.get("/:post_id", async (req, res) => {
   try {
     const { post_id } = req.params;
     const comments = await pool.query(
-      "SELECT COMMENTS.*, COALESCE(COUNTS.LIKES,0) as likes FROM (SELECT * FROM COMMENTS WHERE POST_ID = $1) AS COMMENTS LEFT OUTER JOIN (SELECT COMMENT_ID, COUNT(*) AS LIKES FROM COMMENT_LIKES GROUP BY COMMENT_ID) AS COUNTS ON (COMMENTS.COMMENT_ID = COUNTS.COMMENT_ID)",
+      "SELECT COMMENTS.*, \
+      COALESCE(COUNTS.LIKES, \
+              0) AS LIKES \
+      FROM \
+            (SELECT * \
+              FROM COMMENTS \
+              WHERE POST_ID = $1) AS COMMENTS \
+      LEFT OUTER JOIN \
+            (SELECT ENTITY_ID, \
+                COUNT(*) AS LIKES \
+              FROM VOTES \
+              WHERE ENTITY = 'COMMENT' \
+              GROUP BY ENTITY_ID) AS COUNTS ON (COMMENTS.COMMENT_ID = COUNTS.ENTITY_ID)",
       [post_id]
     );
 
-    comments.rows.forEach((comment) => {
-      let likes = parseInt(comment.likes);
-      comment.likes = likes;
-    });
+    // comments.rows.forEach((comment) => {
+    //   let likes = parseInt(comment.likes);
+    //   comment.likes = likes;
+    // });
 
     res.json(comments.rows);
   } catch (err) {
@@ -48,19 +60,23 @@ router.post("/like/:comment_id", async (req, res) => {
     const { user_id } = req.body;
 
     const like = await pool.query(
-      "SELECT * FROM comment_likes WHERE comment_id = $1 AND user_id = $2",
+      "SELECT * FROM votes WHERE entity_id = $1 AND entity = 'COMMENT' AND user_id = $2",
       [comment_id, user_id]
     );
 
     if (like.rows.length === 0) {
       const newCommentLike = await pool.query(
-        "INSERT INTO comment_likes (comment_id, user_id, liked_at) VALUES($1, $2, current_timestamp) RETURNING *",
+        "INSERT INTO votes (entity_id, user_id, voted_at, entity, vote_type) VALUES($1, $2, current_timestamp, 'COMMENT', 'USER') RETURNING *",
         [comment_id, user_id]
       );
-      res.json(newCommentLike.rows[0]);
-    } else {
-      res.json("Comment has already been liked by the user");
     }
+
+    const updatedLikeCount = await pool.query(
+      "SELECT COUNT(*) AS LIKES FROM VOTES WHERE ENTITY_ID = $1 AND ENTITY = 'COMMENT'",
+      [comment_id]
+    );
+
+    res.json(updatedLikeCount.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
@@ -73,10 +89,15 @@ router.post("/unlike/:comment_id", async (req, res) => {
     const { user_id } = req.body;
 
     const unlike = await pool.query(
-      "DELETE FROM comment_likes WHERE comment_id = $1 AND user_id = $2",
+      "DELETE FROM votes WHERE entity_id = $1 AND entity = 'COMMENT' AND user_id = $2",
       [comment_id, user_id]
     );
-    res.json("Like removed");
+    const updatedLikeCount = await pool.query(
+      "SELECT COUNT(*) AS LIKES FROM VOTES WHERE ENTITY_ID = $1 AND ENTITY = 'COMMENT'",
+      [comment_id]
+    );
+
+    res.json(updatedLikeCount.rows[0]);
   } catch (err) {
     console.error(err.message);
   }

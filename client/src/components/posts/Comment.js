@@ -10,16 +10,20 @@ import _ from "lodash";
 import TimeAgo from "timeago-react";
 
 const MyComment = (props) => {
-  const [action, setAction] = useState(null);
+  const [liked, setLiked] = useState(false);
   const [reply, setReply] = useState(false);
-  const [showSentimentEditor, setShowSentimentEditor] = useState(false);
+  const [showSubmitSentiment, setShowSubmitSentiment] = useState(false);
+
+  const onSentimentChange = (changed) => {
+    setShowSubmitSentiment(changed);
+  };
 
   const like = () => {
-    if (action !== "liked") {
-      setAction("liked");
+    if (!liked) {
+      setLiked(true);
       props.likeComment(props.comment.comment_id, props.postId);
     } else {
-      setAction(null);
+      setLiked(false);
       props.unlikeComment(props.comment.comment_id, props.postId);
     }
   };
@@ -48,73 +52,52 @@ const MyComment = (props) => {
       {" "}
       <Tooltip key="comment-basic-like" title="Like">
         <span onClick={like}>
-          {action === "liked" ? <LikeFilled /> : <LikeOutlined />}
+          {liked ? <LikeFilled /> : <LikeOutlined />}
           <span className="comment-action">{props.likes}</span>
         </span>
       </Tooltip>
       <TimeAgo key="comment-created-at" datetime={props.comment.created_at} />
       <a
-        key="comment-basic-reply-to"
         onClick={() => {
           setReply(!reply);
         }}
       >
         Reply to
       </a>
-      <a
-        key="comment-basic-reply-to"
-        onClick={() => {
-          setReply(!reply);
-        }}
-      >
-        Show sentiment
-      </a>
-      <a
-        key="comment-basic-reply-to"
-        onClick={() => {
-          setShowSentimentEditor(!showSentimentEditor);
-        }}
-      >
-        Add sentiment
-      </a>
+      {showSubmitSentiment ? (
+        <a
+          onClick={() => {
+            //setShowSubmitSentiment(!showSubmitSentiment);
+          }}
+        >
+          Submit sentiment
+        </a>
+      ) : null}
     </Space>,
   ];
 
   if (props.likes !== null) {
-    if (showSentimentEditor) {
-      return (
-        <AntComment
-          actions={actions}
-          author={<a>#{props.comment.comment_id}</a>}
-          avatar={
-            <Avatar
-              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-              alt="Han Solo"
-            />
-          }
-          content={<SentimentEditor textValue={props.comment.comment_body} />}
-        >
-          {renderChildren()}
-        </AntComment>
-      );
-    } else {
-      return (
-        <AntComment
-          actions={actions}
-          author={<a>#{props.comment.comment_id}</a>}
-          avatar={
-            <Avatar
-              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-              alt="Han Solo"
-            />
-          }
-          content={<p>{props.comment.comment_body}</p>}
-        >
-          {showReply()}
-          {renderChildren()}
-        </AntComment>
-      );
-    }
+    return (
+      <AntComment
+        actions={actions}
+        author={<a>#{props.comment.comment_id}</a>}
+        avatar={
+          <Avatar
+            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+            alt="Han Solo"
+          />
+        }
+        content={
+          <SentimentEditor
+            textValue={props.comment.comment_body}
+            onSentimentChange={onSentimentChange}
+          />
+        }
+      >
+        {showReply()}
+        {renderChildren()}
+      </AntComment>
+    );
   }
   return null;
 };

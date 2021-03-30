@@ -49,12 +49,12 @@ export default produce((draft, action = {}) => {
       assignChildren(draft[postId]);
       return;
     case LIKE_COMMENT:
-      draft[action.payload.post_id][action.payload.comment_id].likes =
-        draft[action.payload.post_id][action.payload.comment_id].likes + 1;
+      draft[action.payload.postId][action.payload.commentId].likes =
+        action.payload.likes;
       return;
     case UNLIKE_COMMENT:
-      draft[action.payload.post_id][action.payload.comment_id].likes =
-        draft[action.payload.post_id][action.payload.comment_id].likes - 1;
+      draft[action.payload.postId][action.payload.commentId].likes =
+        action.payload.likes;
       return;
     default:
       return;

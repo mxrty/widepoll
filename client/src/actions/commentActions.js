@@ -50,11 +50,14 @@ export const likeComment = (commentId, postId) => async (
     }
   );
 
-  const payload = { ...response.data, postId };
+  const payload = { ...response.data, postId, commentId };
   dispatch({ type: LIKE_COMMENT, payload: payload });
 };
 
-export const unlikeComment = (commentId) => async (dispatch, getState) => {
+export const unlikeComment = (commentId, postId) => async (
+  dispatch,
+  getState
+) => {
   const { jwt_token, user_id } = getState().auth;
   const response = await api.post(
     `/comments/unlike/${commentId}`,
@@ -67,5 +70,6 @@ export const unlikeComment = (commentId) => async (dispatch, getState) => {
       },
     }
   );
-  dispatch({ type: UNLIKE_COMMENT, payload: response.data });
+  const payload = { ...response.data, postId, commentId };
+  dispatch({ type: UNLIKE_COMMENT, payload: payload });
 };
