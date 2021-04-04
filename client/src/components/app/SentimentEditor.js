@@ -70,7 +70,7 @@ const SentimentEditor = ({ textValue, onSentimentChange }) => {
       value={value}
       onChange={(value) => {
         setValue(value);
-        onSentimentChange(!_.isEqual(value, INITIAL_VALUE));
+        onSentimentChange(!_.isEqual(value, INITIAL_VALUE), value);
       }}
     >
       <HoveringToolbar />
@@ -80,7 +80,6 @@ const SentimentEditor = ({ textValue, onSentimentChange }) => {
           event.preventDefault();
         }}
       />
-      <pre>{JSON.stringify(value, null, 2)}</pre>
     </Slate>
   );
 };
@@ -95,6 +94,17 @@ const toggleFormat = (editor, format) => {
 };
 
 const isFormatActive = (editor, format) => {
+  const [match] = Editor.nodes(editor, {
+    match: (n) =>
+      n["highlightAgree"] === true ||
+      n["highlightDisagree"] === true ||
+      n["highlightBias"] === true,
+    mode: "all",
+  });
+  return !!match;
+};
+
+const isButtonActive = (editor, format) => {
   const [match] = Editor.nodes(editor, {
     match: (n) => n[format] === true,
     mode: "all",
@@ -178,7 +188,7 @@ const FormatButton = ({ format, label }) => {
   return (
     <Button
       reversed
-      active={isFormatActive(editor, format)}
+      active={isButtonActive(editor, format)}
       onMouseDown={(event) => {
         event.preventDefault();
         toggleFormat(editor, format);

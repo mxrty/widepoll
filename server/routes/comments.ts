@@ -103,4 +103,35 @@ router.post("/unlike/:comment_id", async (req, res) => {
   }
 });
 
+//create a new sentiment for a comment
+router.post("/sentiment/:comment_id", async (req, res) => {
+  try {
+    const { comment_id } = req.params;
+    const { user_id } = req.body;
+
+    const sentiment = await pool.query(
+      "SELECT * FROM sentiments WHERE entity_id = $1 AND entity = 'COMMENT' AND user_id = $2",
+      [comment_id, user_id]
+    );
+
+    const sentimentString = "";
+
+    if (sentiment.rows.length === 0) {
+      const newSentiment = await pool.query(
+        "INSERT INTO sentiments (entity_id, user_id, created_at, entity, sentiment) VALUES($1, $2, current_timestamp, 'COMMENT', $3) RETURNING *",
+        [comment_id, user_id, sentimentString]
+      );
+    }
+
+    // const updatedLikeCount = await pool.query(
+    //   "SELECT COUNT(*) AS LIKES FROM VOTES WHERE ENTITY_ID = $1 AND ENTITY = 'COMMENT'",
+    //   [comment_id]
+    // );
+
+    // res.json(updatedLikeCount.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 export default router;

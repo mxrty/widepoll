@@ -31,3 +31,5 @@ export const UNLIKE_SOLUTION = "UNLIKE_SOLUTION";
 
 export const CREATE_POLL = "CREATE_POLL";
 export const FETCH_POLL = "FETCH_POLL";
+
+export const CREATE_SENTIMENT = "CREATE_SENTIMENT";

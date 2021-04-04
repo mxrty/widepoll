@@ -13,9 +13,11 @@ const MyComment = (props) => {
   const [liked, setLiked] = useState(false);
   const [reply, setReply] = useState(false);
   const [showSubmitSentiment, setShowSubmitSentiment] = useState(false);
+  const [sentiment, setSentiment] = useState();
 
-  const onSentimentChange = (changed) => {
+  const onSentimentChange = (changed, sentiment) => {
     setShowSubmitSentiment(changed);
+    setSentiment(sentiment);
   };
 
   const like = () => {
@@ -67,7 +69,8 @@ const MyComment = (props) => {
       {showSubmitSentiment ? (
         <a
           onClick={() => {
-            //setShowSubmitSentiment(!showSubmitSentiment);
+            //TODO: api
+            console.log(sentiment);
           }}
         >
           Submit sentiment

@@ -1,6 +1,7 @@
 import api from "../apis/api";
 import {
   CREATE_COMMENT,
+  CREATE_SENTIMENT,
   FETCH_COMMENTS,
   LIKE_COMMENT,
   UNLIKE_COMMENT,
@@ -72,4 +73,21 @@ export const unlikeComment = (commentId, postId) => async (
   );
   const payload = { ...response.data, postId, commentId };
   dispatch({ type: UNLIKE_COMMENT, payload: payload });
+};
+
+export const createSentiment = (commentId) => async (dispatch, getState) => {
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.post(
+    `/comments/sentiment/${commentId}`,
+    {
+      user_id,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
+  const payload = { ...response.data, commentId };
+  dispatch({ type: CREATE_SENTIMENT, payload: payload });
 };
