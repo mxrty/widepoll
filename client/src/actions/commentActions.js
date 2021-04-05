@@ -3,6 +3,7 @@ import {
   CREATE_COMMENT,
   CREATE_SENTIMENT,
   FETCH_COMMENTS,
+  FETCH_SENTIMENTS,
   LIKE_COMMENT,
   UNLIKE_COMMENT,
 } from "./types";
@@ -75,12 +76,16 @@ export const unlikeComment = (commentId, postId) => async (
   dispatch({ type: UNLIKE_COMMENT, payload: payload });
 };
 
-export const createSentiment = (commentId) => async (dispatch, getState) => {
+export const createSentiment = (commentId, sentiment) => async (
+  dispatch,
+  getState
+) => {
   const { jwt_token, user_id } = getState().auth;
   const response = await api.post(
     `/comments/sentiment/${commentId}`,
     {
       user_id,
+      sentiment,
     },
     {
       headers: {
@@ -90,4 +95,9 @@ export const createSentiment = (commentId) => async (dispatch, getState) => {
   );
   const payload = { ...response.data, commentId };
   dispatch({ type: CREATE_SENTIMENT, payload: payload });
+};
+
+export const fetchSentiments = (postId) => async (dispatch) => {
+  const response = await api.get(`/comments/sentiment/${postId}`);
+  dispatch({ type: FETCH_SENTIMENTS, payload: response.data });
 };

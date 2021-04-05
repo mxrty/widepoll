@@ -1,5 +1,6 @@
 import express from "express";
 import pool from "../src/db";
+import { isSentiment } from "../utils/sentimentConverter";
 
 const router: express.Router = express.Router();
 
@@ -41,11 +42,6 @@ router.get("/:post_id", async (req, res) => {
               GROUP BY ENTITY_ID) AS COUNTS ON (COMMENTS.COMMENT_ID = COUNTS.ENTITY_ID)",
       [post_id]
     );
-
-    // comments.rows.forEach((comment) => {
-    //   let likes = parseInt(comment.likes);
-    //   comment.likes = likes;
-    // });
 
     res.json(comments.rows);
   } catch (err) {
@@ -107,28 +103,56 @@ router.post("/unlike/:comment_id", async (req, res) => {
 router.post("/sentiment/:comment_id", async (req, res) => {
   try {
     const { comment_id } = req.params;
-    const { user_id } = req.body;
+    const { user_id, sentiment } = req.body;
 
-    const sentiment = await pool.query(
+    const existingSentiment = await pool.query(
       "SELECT * FROM sentiments WHERE entity_id = $1 AND entity = 'COMMENT' AND user_id = $2",
       [comment_id, user_id]
     );
 
-    const sentimentString = "";
-
-    if (sentiment.rows.length === 0) {
+    if (existingSentiment.rows.length === 0) {
       const newSentiment = await pool.query(
         "INSERT INTO sentiments (entity_id, user_id, created_at, entity, sentiment) VALUES($1, $2, current_timestamp, 'COMMENT', $3) RETURNING *",
-        [comment_id, user_id, sentimentString]
+        [comment_id, user_id, JSON.stringify(sentiment)]
+      );
+    } else {
+      const updateSentiment = await pool.query(
+        "UPDATE SENTIMENTS\
+          SET SENTIMENT = $1\
+          WHERE ENTITY = 'COMMENT'\
+                  AND ENTITY_ID = $2\
+                  AND USER_ID = $3",
+        [JSON.stringify(sentiment), comment_id, user_id]
       );
     }
 
-    // const updatedLikeCount = await pool.query(
-    //   "SELECT COUNT(*) AS LIKES FROM VOTES WHERE ENTITY_ID = $1 AND ENTITY = 'COMMENT'",
-    //   [comment_id]
-    // );
+    res.json(true);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 
-    // res.json(updatedLikeCount.rows[0]);
+//get a post's comment sentiments
+router.get("/sentiment/:post_id", async (req, res) => {
+  try {
+    const { post_id } = req.params;
+    const sentiments = await pool.query(
+      "SELECT COMMENTS.COMMENT_ID,\
+      SENTIMENTS.SENTIMENT,\
+      COMMENTS.AUTHOR,\
+      COMMENTS.POST_ID\
+    FROM\
+            (SELECT *\
+              FROM COMMENTS\
+              WHERE POST_ID = $1) AS COMMENTS\
+    INNER JOIN\
+            (SELECT *\
+              FROM SENTIMENTS\
+              WHERE ENTITY = 'COMMENT') AS SENTIMENTS ON COMMENTS.COMMENT_ID = SENTIMENTS.ENTITY_ID",
+      [post_id]
+    );
+
+    res.json(sentiments.rows);
   } catch (err) {
     console.error(err.message);
   }

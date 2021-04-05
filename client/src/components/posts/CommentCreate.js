@@ -11,7 +11,7 @@ const validationSchema = Yup.object({
 });
 
 const CommentCreate = (props) => {
-  if (props.isSignedIn)
+  if (props.isSignedIn) {
     return (
       <div style={{ backgroundColor: "lightgrey", padding: "12px" }}>
         <Formik
@@ -51,6 +51,8 @@ const CommentCreate = (props) => {
         </Formik>
       </div>
     );
+  }
+  return null;
 };
 
 const mapStateToProps = (state) => {

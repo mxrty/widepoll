@@ -33,3 +33,4 @@ export const CREATE_POLL = "CREATE_POLL";
 export const FETCH_POLL = "FETCH_POLL";
 
 export const CREATE_SENTIMENT = "CREATE_SENTIMENT";
+export const FETCH_SENTIMENTS = "FETCH_SENTIMENTS";

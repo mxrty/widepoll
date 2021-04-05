@@ -6,6 +6,7 @@ import commentReducer from "./commentReducer";
 import solutionReducer from "./solutionReducer";
 import pollReducer from "./pollReducer";
 import userReducer from "./userReducer";
+import sentimentReducer from "./sentimentReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -15,4 +16,5 @@ export default combineReducers({
   posts: postReducer,
   solutions: solutionReducer,
   users: userReducer,
+  sentiments: sentimentReducer,
 });
