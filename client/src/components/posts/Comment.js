@@ -84,6 +84,28 @@ const MyComment = (props) => {
     </Space>,
   ];
 
+  const interpolateColours = (colour1, colour2, ratio) => {
+    const toHex = (colour) => {
+      const colourString = colour.toString(16);
+      return colourString.length === 1 ? `0${colourString}` : colourString;
+    };
+
+    let r = Math.ceil(
+      parseInt(colour2.substring(0, 2), 16) * ratio +
+        parseInt(colour1.substring(0, 2), 16) * (1 - ratio)
+    );
+    let g = Math.ceil(
+      parseInt(colour2.substring(2, 4), 16) * ratio +
+        parseInt(colour1.substring(2, 4), 16) * (1 - ratio)
+    );
+    let b = Math.ceil(
+      parseInt(colour2.substring(4, 6), 16) * ratio +
+        parseInt(colour1.substring(4, 6), 16) * (1 - ratio)
+    );
+
+    return toHex(r) + toHex(g) + toHex(b);
+  };
+
   const stackSentiments = (sentiments) => {
     const stack = props.comment.comment_body.split("").map((char) => {
       return { char: char, agree: 0, disagree: 0, bias: 0 };
@@ -123,8 +145,51 @@ const MyComment = (props) => {
       return props.comment.comment_body;
     } else {
       const stackedSentiments = stackSentiments(props.sentiments);
-      console.log(stackedSentiments);
-      return "SENTIMENT";
+      const sentimentCount = props.sentiments.length;
+
+      return stackedSentiments.map((char, index) => {
+        let diff = char.agree - char.disagree;
+        let underline = char.bias > 0 ? "2px solid #FF9C15" : "";
+        let highlight = "transparent";
+        let tooltipText = `Agree: ${char.agree} Disagree: ${char.disagree} Bias: ${char.bias}`;
+
+        // min red, max red etc
+        let green = "#549E37";
+        let grey = "#A7AFB6";
+        let red = "#BA4D36";
+
+        if (diff === 0 && char.agree > 0) {
+          highlight = grey;
+        } else if (diff > 0) {
+          highlight = green;
+          // highlight = interpolateColours(
+          //   grey,
+          //   green,
+          //   char.agree / sentimentCount
+          // );
+        } else if (diff < 0) {
+          highlight = red;
+          // highlight = interpolateColours(
+          //   red,
+          //   grey,
+          //   char.disagree / sentimentCount
+          // );
+        }
+
+        return (
+          <Tooltip key={index} title={tooltipText}>
+            <mark
+              style={{
+                backgroundColor: highlight,
+                padding: "0 0",
+                borderBottom: underline,
+              }}
+            >
+              {char.char}
+            </mark>
+          </Tooltip>
+        );
+      });
     }
   };
 

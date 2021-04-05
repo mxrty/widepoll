@@ -139,7 +139,7 @@ router.get("/sentiment/:post_id", async (req, res) => {
     const sentiments = await pool.query(
       "SELECT COMMENTS.COMMENT_ID,\
       SENTIMENTS.SENTIMENT,\
-      COMMENTS.AUTHOR,\
+      SENTIMENTS.USER_ID,\
       COMMENTS.POST_ID\
     FROM\
             (SELECT *\
