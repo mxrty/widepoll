@@ -76,7 +76,7 @@ export const unlikeComment = (commentId, postId) => async (
   dispatch({ type: UNLIKE_COMMENT, payload: payload });
 };
 
-export const createSentiment = (commentId, sentiment) => async (
+export const createSentiment = (postId, commentId, sentiment) => async (
   dispatch,
   getState
 ) => {
@@ -93,7 +93,7 @@ export const createSentiment = (commentId, sentiment) => async (
       },
     }
   );
-  const payload = { ...response.data, commentId };
+  const payload = { ...response.data, commentId, postId };
   dispatch({ type: CREATE_SENTIMENT, payload: payload });
 };
 

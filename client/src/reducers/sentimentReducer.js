@@ -7,11 +7,17 @@ export default produce((draft, action = {}) => {
   }
   switch (action.type) {
     case CREATE_SENTIMENT:
+      if (!draft[action.payload.post_id]) {
+        draft[action.payload.post_id] = {};
+      }
+      if (!draft[action.payload.post_id][action.payload.comment_id]) {
+        draft[action.payload.post_id][action.payload.comment_id] = [];
+      }
+      draft[action.payload.post_id][action.payload.comment_id].push(
+        action.payload.sentiment
+      );
       return;
     case FETCH_SENTIMENTS:
-      if (!action.payload[0]) {
-        return;
-      }
       const postId = action.payload[0].post_id;
       if (!draft[postId]) {
         draft[postId] = {};

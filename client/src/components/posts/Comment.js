@@ -75,7 +75,11 @@ const MyComment = (props) => {
       {showSubmitSentiment ? (
         <a
           onClick={() => {
-            props.createSentiment(props.comment.comment_id, sentiment);
+            props.createSentiment(
+              props.comment.post_id,
+              props.comment.comment_id,
+              sentiment
+            );
           }}
         >
           Submit sentiment

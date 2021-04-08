@@ -9,9 +9,10 @@ import {
   Col,
   Card,
   Button,
-  Modal,
   Space,
   Tabs,
+  Radio,
+  Tooltip,
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import DomainRepresentedItem from "./DomainRepresentedItem";
@@ -140,7 +141,47 @@ const UserProfile = (props) => {
                                   {...provided.dragHandleProps}
                                 >
                                   <Card>
-                                    {rep.rank + 1} : {rep.user_name}
+                                    <Row>
+                                      <Space>
+                                        <Col>
+                                          {rep.rank + 1} : {rep.user_name}
+                                        </Col>
+                                        <Col>
+                                          <Radio.Group
+                                            value={rep.opt_in}
+                                            name={rep.domain}
+                                            onChange={(e) => {
+                                              // Clone current ranking
+                                              const newRepRanking = _.cloneDeep(
+                                                repRanking
+                                              );
+
+                                              let currentRep = newRepRanking[
+                                                rep.domain
+                                              ].find(
+                                                (f) => f.rep_id === rep.rep_id
+                                              );
+
+                                              currentRep.opt_in =
+                                                e.target.value;
+                                              setRepRanking(newRepRanking);
+                                            }}
+                                            buttonStyle="solid"
+                                          >
+                                            <Tooltip title="The representative will vote on your behalf">
+                                              <Radio.Button value={true}>
+                                                Auto
+                                              </Radio.Button>
+                                            </Tooltip>
+                                            <Tooltip title="The representative's votes will be queued, and can be approved or rejected later">
+                                              <Radio.Button value={false}>
+                                                Manual
+                                              </Radio.Button>
+                                            </Tooltip>
+                                          </Radio.Group>
+                                        </Col>
+                                      </Space>
+                                    </Row>
                                   </Card>
                                 </div>
                               )}

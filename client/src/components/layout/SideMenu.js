@@ -5,11 +5,11 @@ import { Row } from "antd";
 const SideMenu = () => {
   return (
     <div style={{ position: "fixed" }}>
-      <Row>
+      {/* <Row>
         <Link to="/search">
           <h2>Search</h2>
         </Link>
-      </Row>
+      </Row> */}
       <Row>
         <Link to="/explore">
           <h2>Explore</h2>
@@ -20,11 +20,11 @@ const SideMenu = () => {
           <h2>Poll</h2>
         </Link>
       </Row>
-      <Row>
+      {/* <Row>
         <Link to="/settings">
           <h2>Settings</h2>
         </Link>
-      </Row>
+      </Row> */}
     </div>
   );
 };

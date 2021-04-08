@@ -115,18 +115,19 @@ router.post("/sentiment/:comment_id", async (req, res) => {
         "INSERT INTO sentiments (entity_id, user_id, created_at, entity, sentiment) VALUES($1, $2, current_timestamp, 'COMMENT', $3) RETURNING *",
         [comment_id, user_id, JSON.stringify(sentiment)]
       );
+      res.json(newSentiment.rows[0]);
     } else {
       const updateSentiment = await pool.query(
         "UPDATE SENTIMENTS\
           SET SENTIMENT = $1\
           WHERE ENTITY = 'COMMENT'\
                   AND ENTITY_ID = $2\
-                  AND USER_ID = $3",
+                  AND USER_ID = $3\
+                  RETURNING *",
         [JSON.stringify(sentiment), comment_id, user_id]
       );
+      res.json(updateSentiment.rows[0]);
     }
-
-    res.json(true);
   } catch (err) {
     console.error(err.message);
   }
