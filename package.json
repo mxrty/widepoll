@@ -11,7 +11,7 @@
     "build": "tsc -p .",
     "test": "jest --config ./jest.config.json",
     "start": "ts-node src/app.ts",
-    "heroku-postbuild": "cd client && npm install && npm run build",
+    "heroku-postbuild": "tsc -p . && cd client && npm install && npm run build",
     "dev": "nodemon --exec ts-node src/app.ts"
   },
   "author": "",
