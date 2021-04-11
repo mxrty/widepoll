@@ -65,7 +65,7 @@ interface repFollowing {
   domain: string;
 }
 
-//make user a representative
+//update user's rep ranking
 router.post("/ranking", authorise, async (req, res) => {
   try {
     const { user_id, updatedRepRanking } = req.body;
