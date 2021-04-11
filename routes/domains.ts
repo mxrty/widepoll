@@ -17,6 +17,7 @@ router.post("/", async (req, res) => {
     res.json(newDomain.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -32,6 +33,7 @@ router.get("/:domain_id", async (req, res) => {
     res.json(domain.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -43,6 +45,7 @@ router.get("/", async (req, res) => {
     res.json(domain.rows);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -59,6 +62,7 @@ router.put("/:domain_id", async (req, res) => {
     res.json("Domain updated");
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -73,6 +77,7 @@ router.delete("/:domain_id", async (req, res) => {
     res.json("Domain deleted");
   } catch (err) {
     console.log(err.message);
+    res.status(500).send("Server error");
   }
 });
 

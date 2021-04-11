@@ -20,6 +20,7 @@ router.post("/pending", async (req, res) => {
     res.json(pendingVotes.rows);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -37,6 +38,7 @@ router.post("/:entity_id", async (req, res) => {
     res.json(removePendingLike.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 

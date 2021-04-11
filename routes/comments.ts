@@ -19,6 +19,7 @@ router.post("/:post_id", async (req, res) => {
     res.json(newComment.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -46,6 +47,7 @@ router.get("/:post_id", async (req, res) => {
     res.json(comments.rows);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -75,6 +77,7 @@ router.post("/like/:comment_id", async (req, res) => {
     res.json(updatedLikeCount.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -96,6 +99,7 @@ router.post("/unlike/:comment_id", async (req, res) => {
     res.json(updatedLikeCount.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -130,6 +134,7 @@ router.post("/sentiment/:comment_id", async (req, res) => {
     }
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -156,6 +161,7 @@ router.get("/sentiment/:post_id", async (req, res) => {
     res.json(sentiments.rows);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 

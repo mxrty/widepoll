@@ -19,6 +19,7 @@ router.post("/", authorise, async (req, res) => {
     res.json(newSolution.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -39,6 +40,7 @@ router.get("/:id", async (req, res) => {
     res.json(solutions.rows);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -68,6 +70,7 @@ router.get("/post/:id", async (req, res) => {
     res.json(solution.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -160,6 +163,7 @@ router.post("/like/:solution_id", async (req, res) => {
     res.json(updatedLikeCount.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -182,6 +186,7 @@ router.post("/unlike/:solution_id", async (req, res) => {
     res.json(updatedLikeCount.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 

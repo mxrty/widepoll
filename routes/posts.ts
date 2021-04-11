@@ -21,6 +21,7 @@ router.post("/", authorise, async (req, res) => {
     res.json(newPost.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -39,6 +40,7 @@ router.get("/", async (req, res) => {
     res.json(allPosts.rows);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send(err.message);
   }
 });
 
@@ -56,6 +58,7 @@ router.get("/:id", async (req, res) => {
     res.json(post.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -76,6 +79,7 @@ router.get("/latest/:num", async (req, res) => {
     res.json(latestPosts.rows);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -101,6 +105,7 @@ router.post("/like/:post_id", async (req, res) => {
     }
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -117,6 +122,7 @@ router.post("/unlike/:post_id", async (req, res) => {
     res.send("Like removed");
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 

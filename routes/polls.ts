@@ -31,6 +31,7 @@ router.post("/", authorise, async (req, res) => {
     res.json(newPoll.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -52,6 +53,7 @@ router.get("/:id", async (req, res) => {
     res.json(poll.rows[0]);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
@@ -76,6 +78,7 @@ router.post("/vote", authorise, async (req, res) => {
     }
   } catch (err) {
     console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
