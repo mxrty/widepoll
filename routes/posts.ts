@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
     res.json(allPosts.rows);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send(err.message);
+    res.status(500).send("Server error");
   }
 });
 

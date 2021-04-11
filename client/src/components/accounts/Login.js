@@ -54,8 +54,6 @@ const Login = (props) => {
                 <Button type="primary" htmlType="submit" loading={isSubmitting}>
                   Sign In
                 </Button>
-                <br />
-                <pre>{JSON.stringify(values, null, 2)}</pre>
               </Space>
             </Form>
           )}

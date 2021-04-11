@@ -86,8 +86,6 @@ const Register = (props) => {
                 <Button type="primary" htmlType="submit" loading={isSubmitting}>
                   Register
                 </Button>
-                <br />
-                <pre>{JSON.stringify(values, null, 2)}</pre>
               </Space>
             </Form>
           )}
