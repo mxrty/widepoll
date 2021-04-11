@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Card, Row, Space } from "antd";
-import { CheckCircleTwoTone } from "@ant-design/icons";
+import { CrownTwoTone } from "@ant-design/icons";
 
-import DomainRepresentedItem from "../DomainRepresentedItem";
+import DomainRepresentedItem from "./DomainRepresentedItem";
 import { fetchUser } from "../../../actions";
 
 const RepCard = (props) => {
@@ -16,8 +16,7 @@ const RepCard = (props) => {
       <Card
         title={
           <Space direction="horizontal">
-            <CheckCircleTwoTone twoToneColor="#eb2f96" />{" "}
-            <div>Representative</div>
+            <CrownTwoTone twoToneColor="#FF9C15" /> <div>Representative</div>
           </Space>
         }
       >

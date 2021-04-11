@@ -7,6 +7,7 @@ import solutionReducer from "./solutionReducer";
 import pollReducer from "./pollReducer";
 import userReducer from "./userReducer";
 import sentimentReducer from "./sentimentReducer";
+import pendingVotesReducer from "./pendingVotesReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -17,4 +18,5 @@ export default combineReducers({
   solutions: solutionReducer,
   users: userReducer,
   sentiments: sentimentReducer,
+  pendingVotes: pendingVotesReducer,
 });

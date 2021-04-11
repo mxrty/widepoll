@@ -7,6 +7,7 @@ import {
   BECOME_REP,
   FETCH_USER,
   FOLLOW_REP,
+  UPDATE_REP_RANKING,
 } from "./types";
 
 export const signIn = (formValues) => async (dispatch) => {
@@ -74,4 +75,27 @@ export const followRep = (repId, optIn, domain) => async (
 export const fetchUser = (userId) => async (dispatch) => {
   const response = await api.get(`/users/${userId}`);
   dispatch({ type: FETCH_USER, payload: response.data });
+};
+
+export const updateRepsFollowed = (updatedRepRanking) => async (
+  dispatch,
+  getState
+) => {
+  const { jwt_token, user_id } = getState().auth;
+  const response = await api.post(
+    "/reps/ranking",
+    {
+      user_id,
+      updatedRepRanking,
+    },
+    {
+      headers: {
+        jwt_token: jwt_token,
+      },
+    }
+  );
+  dispatch({
+    type: UPDATE_REP_RANKING,
+    payload: { ...response.data, user_id, updatedRepRanking },
+  });
 };

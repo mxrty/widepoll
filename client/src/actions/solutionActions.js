@@ -3,6 +3,7 @@ import history from "../history";
 import {
   CREATE_SOLUTION,
   FETCH_SOLUTIONS,
+  FETCH_SOLUTION,
   LIKE_SOLUTION,
   UNLIKE_SOLUTION,
 } from "./types";
@@ -29,6 +30,11 @@ export const createSolution = (formValues) => async (dispatch, getState) => {
 export const fetchSolutions = (postId) => async (dispatch) => {
   const response = await api.get(`/solutions/${postId}`);
   dispatch({ type: FETCH_SOLUTIONS, payload: response.data });
+};
+
+export const fetchSolution = (solutionId) => async (dispatch) => {
+  const response = await api.get(`/solutions/post/${solutionId}`);
+  dispatch({ type: FETCH_SOLUTION, payload: response.data });
 };
 
 export const likeSolution = (issueId, solutionId) => async (

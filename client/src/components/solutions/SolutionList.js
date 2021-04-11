@@ -10,7 +10,7 @@ import { fetchSolutions } from "../../actions";
 const SolutionList = (props) => {
   useEffect(() => {
     props.fetchSolutions(props.postId);
-  });
+  }, []);
 
   // Use above until fix async likes fetch
   // useEffect(() => {

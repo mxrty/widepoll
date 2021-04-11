@@ -42,6 +42,35 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//get a single solution
+router.get("/post/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const solution = await pool.query(
+      "SELECT SOLUTIONS.*,\
+      POSTS.DOMAIN,\
+      COALESCE(COUNTS.LIKES,\
+              0) AS LIKES\
+    FROM\
+            (SELECT *\
+              FROM SOLUTIONS\
+              WHERE SOLUTION_ID = $1) AS SOLUTIONS\
+    LEFT OUTER JOIN\
+            (SELECT ENTITY_ID,\
+                COUNT(*) AS LIKES\
+              FROM VOTES\
+              WHERE ENTITY = 'SOLUTION'\
+              GROUP BY ENTITY_ID) AS COUNTS ON (SOLUTIONS.SOLUTION_ID = COUNTS.ENTITY_ID)\
+    LEFT OUTER JOIN POSTS ON (POSTS.POST_ID = SOLUTIONS.ISSUE_ID)",
+      [id]
+    );
+
+    res.json(solution.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 //create a new like for a solution
 router.post("/like/:solution_id", async (req, res) => {
   try {

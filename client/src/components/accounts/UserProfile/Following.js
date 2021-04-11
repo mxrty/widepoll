@@ -4,7 +4,7 @@ import _ from "lodash";
 import { Row, Col, Card, Button, Space, Tabs, Radio, Tooltip } from "antd";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-import { fetchUser } from "../../../actions";
+import { fetchUser, updateRepsFollowed } from "../../../actions";
 
 const { TabPane } = Tabs;
 
@@ -52,7 +52,15 @@ const Following = (props) => {
 
   const renderUpdateRankingButton = () => {
     if (!_.isEqual(props.user.following, repRanking)) {
-      return <Button>Update</Button>;
+      return (
+        <Button
+          onClick={() => {
+            props.updateRepsFollowed(repRanking);
+          }}
+        >
+          Update
+        </Button>
+      );
     }
   };
 
@@ -178,4 +186,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, { fetchUser })(Following);
+export default connect(mapStateToProps, { fetchUser, updateRepsFollowed })(
+  Following
+);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { followRep } from "../../actions";
+import { followRep } from "../../../actions";
 import { Button, Modal, Space } from "antd";
 
 const DomainRepresentedItem = (props) => {

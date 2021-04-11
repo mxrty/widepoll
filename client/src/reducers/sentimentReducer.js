@@ -18,15 +18,19 @@ export default produce((draft, action = {}) => {
       );
       return;
     case FETCH_SENTIMENTS:
-      const postId = action.payload[0].post_id;
-      if (!draft[postId]) {
-        draft[postId] = {};
+      if (!action.payload[0]) {
+        return;
+      }
+      if (!draft[action.payload[0].post_id]) {
+        draft[action.payload[0].post_id] = {};
       }
       action.payload.forEach((sentiment) => {
-        if (!draft[postId][sentiment.comment_id]) {
-          draft[postId][sentiment.comment_id] = [];
+        if (!draft[sentiment.post_id][sentiment.comment_id]) {
+          draft[sentiment.post_id][sentiment.comment_id] = [];
         }
-        draft[postId][sentiment.comment_id].push(sentiment.sentiment);
+        draft[sentiment.post_id][sentiment.comment_id].push(
+          sentiment.sentiment
+        );
       });
       return;
     default:

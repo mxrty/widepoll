@@ -2,6 +2,7 @@ import produce from "immer";
 import {
   CREATE_SOLUTION,
   FETCH_SOLUTIONS,
+  FETCH_SOLUTION,
   LIKE_SOLUTION,
   UNLIKE_SOLUTION,
 } from "../actions/types";
@@ -12,6 +13,13 @@ export default produce((draft, action = {}) => {
   }
   switch (action.type) {
     case CREATE_SOLUTION:
+      if (!draft[action.payload.issue_id]) {
+        draft[action.payload.issue_id] = {};
+      }
+      draft[action.payload.issue_id][action.payload.solution_id] =
+        action.payload;
+      return;
+    case FETCH_SOLUTION:
       if (!draft[action.payload.issue_id]) {
         draft[action.payload.issue_id] = {};
       }

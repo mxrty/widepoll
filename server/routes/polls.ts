@@ -46,7 +46,6 @@ router.get("/:id", async (req, res) => {
       "SELECT POLL_OPTIONS.OPTION_ID, POLL_OPTIONS.BODY, COALESCE(COUNTS.VOTES, 0) AS VOTES  FROM (SELECT * FROM POLL_OPTIONS WHERE POLL_ID = $1) AS POLL_OPTIONS LEFT OUTER JOIN (SELECT OPTION_ID, COUNT(*) AS VOTES FROM POLL_VOTES GROUP BY OPTION_ID) AS COUNTS ON (POLL_OPTIONS.OPTION_ID = COUNTS.OPTION_ID)",
       [id]
     );
-    //console.log(pollOptions);
 
     poll.rows[0].options = pollOptions.rows;
 

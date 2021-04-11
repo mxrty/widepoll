@@ -10,13 +10,13 @@ const UserProfile = (props) => {
     <>
       <Row justify="start">
         <Col>
-          <ProfileBio />
+          <ProfileBio userId={parseInt(props.match.params.userId)} />
         </Col>
         <Col flex="auto">
-          <RepCard userId={props.match.params.userId} />
+          <RepCard userId={parseInt(props.match.params.userId)} />
         </Col>
       </Row>
-      <ProfileFeed userId={props.match.params.userId} />
+      <ProfileFeed userId={parseInt(props.match.params.userId)} />
     </>
   );
 };

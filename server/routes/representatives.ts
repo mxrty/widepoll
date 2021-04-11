@@ -58,4 +58,38 @@ router.post("/follow", authorise, async (req, res) => {
   }
 });
 
+interface repFollowing {
+  rep_id: number;
+  rank: number;
+  opt_in: boolean;
+  domain: string;
+}
+
+//make user a representative
+router.post("/ranking", authorise, async (req, res) => {
+  try {
+    const { user_id, updatedRepRanking } = req.body;
+
+    for (let domain of Object.keys(updatedRepRanking)) {
+      const deleteCurrentDomainRanking = await pool.query(
+        "DELETE FROM REP_FOLLOWERS WHERE FOLLOWER_ID = $1 AND DOMAIN = $2",
+        [user_id, domain]
+      );
+
+      updatedRepRanking[domain].forEach(async (following: repFollowing) => {
+        const { rep_id, rank, opt_in, domain } = following;
+        const newFollower = await pool.query(
+          "INSERT INTO REP_FOLLOWERS (REP_ID, FOLLOWER_ID, FOLLOWED_AT, RANK, OPT_IN, DOMAIN) VALUES ($1, $2, CURRENT_TIMESTAMP, $3, $4, $5)",
+          [rep_id, user_id, rank, opt_in, domain]
+        );
+      });
+    }
+
+    res.json(true);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
 export default router;
