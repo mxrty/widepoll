@@ -13,6 +13,10 @@ const prodConfig: any = {
   connectionString: process.env.DATABASE_URL,
 };
 
+if (process.env.NODE_ENV === "production") {
+  console.log(process.env.DATABASE_URL);
+}
+
 const pool = new Pool(
   process.env.NODE_ENV === "production" ? prodConfig : devConfig
 );
