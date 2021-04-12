@@ -11,7 +11,7 @@ const RepCard = (props) => {
     props.fetchUser(props.userId);
   }, []);
 
-  if (props.user) {
+  if (props.user && props.user.domainsRepresented.length > 0) {
     return (
       <Card
         title={
