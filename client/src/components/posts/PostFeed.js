@@ -10,7 +10,7 @@ const PostFeed = (props) => {
   useEffect(() => {
     props.fetchPosts();
   }, []);
-  const [sort, setSort] = useState("Trending");
+  const [sort, setSort] = useState("Top");
 
   const handleMenuClick = (e) => {
     setSort(e.key);
@@ -38,9 +38,6 @@ const PostFeed = (props) => {
             <Dropdown
               overlay={
                 <Menu onClick={handleMenuClick}>
-                  <Menu.Item key="Trending" icon={<UserOutlined />}>
-                    Trending
-                  </Menu.Item>
                   <Menu.Item key="Top" icon={<UserOutlined />}>
                     Top
                   </Menu.Item>

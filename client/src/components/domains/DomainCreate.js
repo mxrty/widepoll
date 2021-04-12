@@ -55,8 +55,6 @@ const DomainCreate = (props) => {
                 <Button type="primary" htmlType="submit" loading={isSubmitting}>
                   Create Domain
                 </Button>
-                <br />
-                <pre>{JSON.stringify(values, null, 2)}</pre>
               </Space>
             </Form>
           )}

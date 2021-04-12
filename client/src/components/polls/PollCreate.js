@@ -106,8 +106,6 @@ const PollCreate = (props) => {
                 <Button type="primary" htmlType="submit" loading={isSubmitting}>
                   Create Poll
                 </Button>
-                <br />
-                <pre>{JSON.stringify(values, null, 2)}</pre>
               </Space>
             </Form>
           )}

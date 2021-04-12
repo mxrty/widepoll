@@ -67,8 +67,6 @@ class PostCreate extends React.Component {
                 <Button type="primary" htmlType="submit" loading={isSubmitting}>
                   Create Post
                 </Button>
-                <br />
-                <pre>{JSON.stringify(values, null, 2)}</pre>
               </Space>
             </Form>
           )}
