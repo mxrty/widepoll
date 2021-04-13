@@ -5,6 +5,7 @@ import { List } from "antd";
 import TimeAgo from "timeago-react";
 
 import { fetchLatestPosts } from "../../actions";
+import "../../styles/webkitStyles.css";
 
 const RecentPosts = (props) => {
   useEffect(() => {
@@ -14,7 +15,8 @@ const RecentPosts = (props) => {
   const formatText = (title, created_at) => {
     return (
       <>
-        {title} <TimeAgo datetime={created_at} />
+        <div className="limit-text-1">{title}</div>{" "}
+        <TimeAgo datetime={created_at} />
       </>
     );
   };

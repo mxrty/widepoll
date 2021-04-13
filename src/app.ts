@@ -36,9 +36,9 @@ app.use("/reps", repRoutes);
 app.use("/users", userRoutes);
 app.use("/votes", voteRoutes);
 
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "../../client/build/index.html"));
-// });
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "..", "client/build/index.html"));
+});
 
 app.listen(PORT, () => {
   console.log(`server has started on port ${PORT}`);

@@ -202,7 +202,7 @@ const MyComment = (props) => {
       return (
         <AntComment
           actions={actions}
-          author={<a>#{props.comment.comment_id}</a>}
+          author={<a>#{props.comment.comment_id} </a>}
           avatar={
             <Avatar
               src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"

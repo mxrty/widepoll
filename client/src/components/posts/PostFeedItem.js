@@ -6,6 +6,8 @@ import { LikeOutlined, LikeFilled } from "@ant-design/icons";
 import { likePost, unlikePost } from "../../actions";
 import TimeAgo from "timeago-react";
 
+import "../../styles/webkitStyles.css";
+
 const PostFeedItem = (props) => {
   const [action, setAction] = useState(null);
 
@@ -37,7 +39,9 @@ const PostFeedItem = (props) => {
                   {props.post.post_type}: {props.post.title}
                 </div>
               }
-              description={props.post.post_body}
+              description={
+                <div className="limit-text-2">{props.post.post_body}</div>
+              }
             />
             <TimeAgo datetime={props.post.created_at} />
           </List.Item>

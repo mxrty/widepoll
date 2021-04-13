@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Card, Row, Col } from "antd";
 
-import { fetchPost } from "../../actions";
+import { fetchPost, fetchUser } from "../../actions";
 import PostComments from "./PostComments";
 import SolutionList from "../solutions/SolutionList";
 import DomainBlurb from "../domains/DomainBlurb";
@@ -12,12 +12,20 @@ const PostShow = (props) => {
     props.fetchPost(props.match.params.postId);
   }, []);
 
+  useEffect(() => {
+    if (props.post) {
+      props.fetchUser(props.post.author);
+    }
+  }, [props.post]);
+
   const renderPostBody = () => {
     if (props.post) {
       return (
         <>
-          <Card type="inner" title={props.post.title}>
+          <Card type="inner">
+            <h2>{props.post.title}</h2>
             <p>{props.post.post_body}</p>
+            {props.user ? <small>{props.user.user_name}</small> : null}
           </Card>
           <PostComments postId={props.post.post_id} />
         </>
@@ -62,7 +70,10 @@ const PostShow = (props) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  return { post: state.posts[ownProps.match.params.postId] };
+  return {
+    post: state.posts[ownProps.match.params.postId],
+    user: ownProps.post ? state.users[ownProps.post.author] : null,
+  };
 };
 
-export default connect(mapStateToProps, { fetchPost })(PostShow);
+export default connect(mapStateToProps, { fetchPost, fetchUser })(PostShow);
