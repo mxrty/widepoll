@@ -33,6 +33,7 @@ const SolutionList = (props) => {
         renderItem={(solution) => (
           <SolutionListItem
             domain={props.domain}
+            postId={props.postId}
             solution={solution}
             key={solution.solution_id}
           />

@@ -88,7 +88,7 @@ const App = () => {
                   component={PostShow}
                 />
                 <Route
-                  path="/d/:domain/solutions/:solutionId"
+                  path="/d/:domain/posts/:postId/solution/:solutionId"
                   exact
                   component={SolutionShow}
                 />

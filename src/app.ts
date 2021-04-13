@@ -21,10 +21,6 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname, "..", "..", "client/build")));
 
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "..", "..", "client/build")));
-// }
-
 //ROUTES
 app.use("/posts", postRoutes);
 app.use("/domains", domainRoutes);

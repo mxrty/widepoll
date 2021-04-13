@@ -20,8 +20,6 @@ const SolutionListItem = (props) => {
     }
   };
 
-  console.log(props.solution);
-
   return (
     <Row>
       <Col
@@ -37,7 +35,9 @@ const SolutionListItem = (props) => {
         </span>
       </Col>
       <Col>
-        <Link to={`/d/${props.domain}/solutions/${props.solution.solution_id}`}>
+        <Link
+          to={`/d/${props.domain}/posts/${props.postId}/solution/${props.solution.solution_id}`}
+        >
           <List.Item>
             <strong className="limit-text-1">
               SOLUTION: {props.solution.title}

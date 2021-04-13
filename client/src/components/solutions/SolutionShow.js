@@ -4,7 +4,6 @@ import { Card, Row, Col } from "antd";
 import TimeAgo from "timeago-react";
 
 import { fetchSolution } from "../../actions";
-import PostComments from "../posts/PostComments";
 import DomainBlurb from "../domains/DomainBlurb";
 
 const SolutionShow = (props) => {
@@ -29,7 +28,6 @@ const SolutionShow = (props) => {
               />
             </i>
           </Card>
-          <PostComments postId={props.solution.post_id} />
         </>
       );
     }
@@ -50,7 +48,11 @@ const SolutionShow = (props) => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    solution: state.solutions[ownProps.match.params.solutionId],
+    solution: state.solutions[ownProps.match.params.postId]
+      ? state.solutions[ownProps.match.params.postId][
+          ownProps.match.params.solutionId
+        ]
+      : null,
   };
 };
 
