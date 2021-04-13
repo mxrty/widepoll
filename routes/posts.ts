@@ -49,7 +49,22 @@ router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const post = await pool.query(
-      "SELECT POSTS.*, COALESCE(COUNTS.LIKES,0) as likes FROM (SELECT * FROM POSTS WHERE POST_ID = $1) AS POSTS LEFT OUTER JOIN (SELECT POST_ID, COUNT(*) AS LIKES FROM POST_VOTES GROUP BY POST_ID) AS COUNTS ON (POSTS.POST_ID = COUNTS.POST_ID)",
+      "SELECT POSTS.*, \
+      COALESCE(COUNTS.LIKES, \
+              0) AS LIKES, \
+      USERS.USER_NAME AS AUTHOR_NAME \
+    FROM \
+            (SELECT * \
+              FROM POSTS \
+              WHERE POST_ID = $1) AS POSTS \
+    LEFT OUTER JOIN \
+            (SELECT POST_ID, \
+                COUNT(*) AS LIKES \
+              FROM POST_VOTES \
+              GROUP BY POST_ID) AS COUNTS ON (POSTS.POST_ID = COUNTS.POST_ID) \
+    LEFT OUTER JOIN \
+            (SELECT * \
+              FROM USERS) AS USERS ON USERS.USER_ID = POSTS.AUTHOR",
       [id]
     );
 

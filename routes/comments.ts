@@ -30,17 +30,21 @@ router.get("/:post_id", async (req, res) => {
     const comments = await pool.query(
       "SELECT COMMENTS.*, \
       COALESCE(COUNTS.LIKES, \
-              0) AS LIKES \
-      FROM \
+              0) AS LIKES, \
+      USERS.USER_NAME AS AUTHOR_NAME \
+    FROM \
             (SELECT * \
               FROM COMMENTS \
-              WHERE POST_ID = $1) AS COMMENTS \
-      LEFT OUTER JOIN \
+              WHERE POST_ID = $1)AS COMMENTS \
+    LEFT OUTER JOIN \
             (SELECT ENTITY_ID, \
                 COUNT(*) AS LIKES \
               FROM VOTES \
               WHERE ENTITY = 'COMMENT' \
-              GROUP BY ENTITY_ID) AS COUNTS ON (COMMENTS.COMMENT_ID = COUNTS.ENTITY_ID)",
+              GROUP BY ENTITY_ID) AS COUNTS ON (COMMENTS.COMMENT_ID = COUNTS.ENTITY_ID) \
+    LEFT OUTER JOIN \
+            (SELECT * \
+              FROM USERS) AS USERS ON USERS.USER_ID = COMMENTS.AUTHOR",
       [post_id]
     );
 

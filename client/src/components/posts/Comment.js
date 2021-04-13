@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { Comment as AntComment, Avatar, Tooltip, Space } from "antd";
 import { LikeOutlined, LikeFilled } from "@ant-design/icons";
+import _ from "lodash";
+import TimeAgo from "timeago-react";
+
 import CommentCreate from "./CommentCreate";
 import { likeComment, unlikeComment, createSentiment } from "../../actions";
 import SentimentEditor from "../app/SentimentEditor";
-
-import _ from "lodash";
-import TimeAgo from "timeago-react";
 
 const MyComment = (props) => {
   const [liked, setLiked] = useState(false);
@@ -64,7 +65,6 @@ const MyComment = (props) => {
           <span className="comment-action">{props.likes}</span>
         </span>
       </Tooltip>
-      <TimeAgo key="comment-created-at" datetime={props.comment.created_at} />
       <a
         onClick={() => {
           setReply(!reply);
@@ -202,7 +202,18 @@ const MyComment = (props) => {
       return (
         <AntComment
           actions={actions}
-          author={<a>#{props.comment.comment_id} </a>}
+          author={
+            <Link to={`/user/${props.comment.author}`}>
+              #{props.comment.comment_id}{" "}
+              <i>
+                submitted by {props.comment.author_name}{" "}
+                <TimeAgo
+                  key="comment-created-at"
+                  datetime={props.comment.created_at}
+                />
+              </i>
+            </Link>
+          }
           avatar={
             <Avatar
               src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
