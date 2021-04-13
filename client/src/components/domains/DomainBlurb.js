@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
 import { Card } from "antd";
 
+import { fetchDomain } from "../../actions";
+
 const DomainBlurb = (props) => {
+  useEffect(() => {
+    props.fetchDomain(props.domainName);
+  }, []);
+
   return (
     <Card type="inner" title={props.domainName}>
-      <p>This is a short description of the domain to show visitors.</p>
-      <small>42 people currently browsing this domain.</small>
+      {props.domain ? <p>{props.domain.description}</p> : null}
+      <small>1 person currently browsing this domain.</small>
     </Card>
   );
 };
 
-export default DomainBlurb;
+const mapStateToProps = (state, ownProps) => {
+  return { domain: state.domains[ownProps.domainName] };
+};
+
+export default connect(mapStateToProps, { fetchDomain })(DomainBlurb);
