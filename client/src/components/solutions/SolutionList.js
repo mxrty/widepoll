@@ -12,11 +12,6 @@ const SolutionList = (props) => {
     props.fetchSolutions(props.postId);
   }, []);
 
-  // Use above until fix async likes fetch
-  // useEffect(() => {
-  //   props.fetchSolutions(props.postId);
-  // },[]);
-
   const renderCreate = () => {
     if (props.isSignedIn) {
       return (
@@ -37,7 +32,11 @@ const SolutionList = (props) => {
           pageSize: 10,
         }}
         renderItem={(solution) => (
-          <SolutionListItem solution={solution} key={solution.solution_id} />
+          <SolutionListItem
+            domain={props.domain}
+            solution={solution}
+            key={solution.solution_id}
+          />
         )}
       />
     );
