@@ -12,15 +12,6 @@ const RecentPosts = (props) => {
     props.fetchLatestPosts(10);
   }, []);
 
-  const formatText = (title, created_at) => {
-    return (
-      <>
-        <div className="limit-text-1">{title}</div>{" "}
-        <TimeAgo datetime={created_at} />
-      </>
-    );
-  };
-
   if (!props.posts) {
     return <div>No posts</div>;
   }
@@ -34,7 +25,6 @@ const RecentPosts = (props) => {
       renderItem={(post) => (
         <Link to={`/d/${post.domain}/posts/${post.post_id}`}>
           <List.Item>
-            {/* {formatText(post.title, post.created_at)} */}
             <List.Item.Meta
               title={<div className="limit-text-1">{post.title}</div>}
             />

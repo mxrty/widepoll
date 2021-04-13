@@ -5,7 +5,7 @@ import { List, Row, Col } from "antd";
 import { LikeOutlined, LikeFilled } from "@ant-design/icons";
 
 import { likeSolution, unlikeSolution } from "../../actions";
-import "../../styles/webkitStyles";
+import "../../styles/webkitStyles.css";
 
 const SolutionListItem = (props) => {
   const [action, setAction] = useState(null);
