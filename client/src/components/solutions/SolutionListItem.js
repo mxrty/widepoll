@@ -24,16 +24,24 @@ const SolutionListItem = (props) => {
 
   return (
     <Row>
-      <Col>
+      <Col
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <span onClick={like}>
           {action === "liked" ? <LikeFilled /> : <LikeOutlined />}
           {props.likes ? props.likes : 0}
         </span>
       </Col>
       <Col>
-        <Link to={`/d/${props.domain}/posts/${props.solution.solution_id}`}>
+        <Link to={`/d/${props.domain}/solutions/${props.solution.solution_id}`}>
           <List.Item>
-            <div className="limit-text-1">{props.solution.title}</div>
+            <strong className="limit-text-1">
+              SOLUTION: {props.solution.title}
+            </strong>
           </List.Item>
         </Link>
       </Col>

@@ -25,6 +25,7 @@ import PollShow from "./polls/PollShow";
 import PollResults from "./polls/PollResults";
 import UserProfile from "./accounts/UserProfile";
 import DomainList from "./domains/DomainList";
+import SolutionShow from "./solutions/SolutionShow";
 
 const { Content } = Layout;
 
@@ -85,6 +86,11 @@ const App = () => {
                   path="/d/:domain/posts/:postId"
                   exact
                   component={PostShow}
+                />
+                <Route
+                  path="/d/:domain/solutions/:solutionId"
+                  exact
+                  component={SolutionShow}
                 />
               </Switch>
             </Col>

@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { List, Button } from "antd";
 
 import SolutionListItem from "./SolutionListItem";
-
 import { fetchSolutions } from "../../actions";
 
 const SolutionList = (props) => {
