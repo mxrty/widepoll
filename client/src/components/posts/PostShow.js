@@ -24,7 +24,9 @@ const PostShow = (props) => {
         <>
           <Card type="inner">
             <h2>{props.post.title}</h2>
-            <p>{props.post.post_body}</p>
+            <p style={{ whiteSpace: "pre-line" }}>
+              {props.post.post_body.replace(/↵/g, "<br/>")}
+            </p>
             {props.user ? <small>{props.user.user_name}</small> : null}
           </Card>
           <PostComments postId={props.post.post_id} />
@@ -49,7 +51,7 @@ const PostShow = (props) => {
           {renderPostBody()}
         </Col>
         <Col span={6} style={{ padding: "5px" }}>
-          <DomainBlurb />
+          <DomainBlurb domainName={props.post.domain} />
         </Col>
       </Row>
     );

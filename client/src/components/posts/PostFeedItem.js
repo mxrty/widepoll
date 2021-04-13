@@ -35,7 +35,7 @@ const PostFeedItem = (props) => {
             <List.Item.Meta
               avatar={<Skeleton.Image />}
               title={
-                <div>
+                <div className="limit-text-2">
                   {props.post.post_type}: {props.post.title}
                 </div>
               }

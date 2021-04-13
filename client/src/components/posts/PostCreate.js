@@ -46,7 +46,7 @@ class PostCreate extends React.Component {
                 <label>Post body:</label>
                 <Field
                   name="body"
-                  as={Input}
+                  as={Input.TextArea}
                   placeholder="Post body"
                   autoComplete="off"
                 />
