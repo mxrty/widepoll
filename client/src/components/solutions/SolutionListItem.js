@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { List, Skeleton, Row, Col } from "antd";
+import { List, Row, Col } from "antd";
 import { LikeOutlined, LikeFilled } from "@ant-design/icons";
+
 import { likeSolution, unlikeSolution } from "../../actions";
+import "../../styles/webkitStyles";
 
 const SolutionListItem = (props) => {
   const [action, setAction] = useState(null);
@@ -32,9 +34,7 @@ const SolutionListItem = (props) => {
         >
           <List.Item>
             <List.Item.Meta
-              avatar={<Skeleton.Image />}
-              title={<div>{props.solution.title}</div>}
-              description={props.solution.post_body}
+              title={<div className="limit-text-1">{props.solution.title}</div>}
             />
           </List.Item>
         </Link>
