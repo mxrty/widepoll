@@ -23,7 +23,14 @@ const PostFeedItem = (props) => {
 
   return (
     <Row>
-      <Col flex="40px">
+      <Col
+        flex="40px"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <span onClick={like}>
           {action === "liked" ? <LikeFilled /> : <LikeOutlined />}
           {props.likes ? props.likes : 0}

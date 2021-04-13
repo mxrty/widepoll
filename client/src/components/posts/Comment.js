@@ -250,7 +250,6 @@ const MyComment = (props) => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    userId: state.auth.user_id,
     likes:
       state.comments[ownProps.comment.post_id][ownProps.comment.comment_id]
         .likes,

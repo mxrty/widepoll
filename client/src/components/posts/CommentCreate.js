@@ -18,7 +18,7 @@ const CommentCreate = (props) => {
           initialValues={{
             comment: "",
           }}
-          onSubmit={(data, { setSubmitting }) => {
+          onSubmit={(data, { setSubmitting, resetForm }) => {
             setSubmitting(true);
             props.createComment(
               {
@@ -28,6 +28,7 @@ const CommentCreate = (props) => {
               },
               props.postId
             );
+            resetForm({});
             setSubmitting(false);
           }}
           validationSchema={validationSchema}
@@ -36,7 +37,8 @@ const CommentCreate = (props) => {
             <Form>
               <Field
                 name="comment"
-                as={Input}
+                value={values.comment || ""}
+                as={Input.TextArea}
                 placeholder="Reply"
                 autoComplete="off"
               />

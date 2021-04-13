@@ -33,7 +33,13 @@ const RecentPosts = (props) => {
       bordered
       renderItem={(post) => (
         <Link to={`/d/${post.domain}/posts/${post.post_id}`}>
-          <List.Item>{formatText(post.title, post.created_at)}</List.Item>
+          <List.Item>
+            {/* {formatText(post.title, post.created_at)} */}
+            <List.Item.Meta
+              title={<div className="limit-text-1">{post.title}</div>}
+            />
+            <TimeAgo datetime={post.created_at} />
+          </List.Item>
         </Link>
       )}
     />

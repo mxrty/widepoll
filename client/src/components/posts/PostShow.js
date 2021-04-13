@@ -19,6 +19,7 @@ const PostShow = (props) => {
   }, [props.post]);
 
   const renderPostBody = () => {
+    console.log(props.user);
     if (props.post) {
       return (
         <>
