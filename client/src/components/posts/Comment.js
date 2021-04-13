@@ -234,15 +234,18 @@ const MyComment = (props) => {
     } else {
       return (
         <AntComment
-          actions={[
-            <Space>
-              <TimeAgo
-                key="comment-created-at"
-                datetime={props.comment.created_at}
-              />
-            </Space>,
-          ]}
-          author={<a>#{props.comment.comment_id}</a>}
+          author={
+            <Link to={`/user/${props.comment.author}`}>
+              #{props.comment.comment_id}{" "}
+              <i>
+                submitted by {props.comment.author_name}{" "}
+                <TimeAgo
+                  key="comment-created-at"
+                  datetime={props.comment.created_at}
+                />
+              </i>
+            </Link>
+          }
           avatar={
             <Avatar
               src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"

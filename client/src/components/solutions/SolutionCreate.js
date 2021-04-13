@@ -43,7 +43,7 @@ const SolutionCreate = (props) => {
               <label>Post body:</label>
               <Field
                 name="body"
-                as={Input}
+                as={Input.TextArea}
                 placeholder="Post body"
                 autoComplete="off"
               />
@@ -54,8 +54,6 @@ const SolutionCreate = (props) => {
               <Button type="primary" htmlType="submit" loading={isSubmitting}>
                 Create Solution
               </Button>
-              <br />
-              <pre>{JSON.stringify(values, null, 2)}</pre>
             </Space>
           </Form>
         )}
