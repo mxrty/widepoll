@@ -27,6 +27,9 @@ export default produce((draft, action = {}) => {
         action.payload;
       return;
     case FETCH_SOLUTIONS:
+      if (!draft[action.payload[0]]) {
+        return;
+      }
       if (!draft[action.payload[0].issue_id]) {
         draft[action.payload[0].issue_id] = {};
       }

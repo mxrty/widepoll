@@ -17,14 +17,7 @@ const ProfileBio = ({ fetchUser, userId, user }) => {
         <Space direction="vertical">
           <h1>{user.user_name}</h1>
           <Avatar shape="square" size={64} icon={<UserOutlined />} />
-          <div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur.
-          </div>
+          <div>Live. Love. Laugh. I like pizza, dogs and politics.</div>
           <Row>
             <Col span={12}>
               <Row>Followers</Row>

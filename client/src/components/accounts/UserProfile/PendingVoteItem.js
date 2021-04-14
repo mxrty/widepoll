@@ -39,6 +39,7 @@ const PendingVoteItem = ({
         <Row>
           <Space>
             <Col>
+              Your representative{" "}
               {<Link to={`/user/${rep.user_id}`}>{rep.user_name}</Link>} voted
               on{" "}
               {
