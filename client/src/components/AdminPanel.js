@@ -64,8 +64,6 @@ class AdminPanel extends React.Component {
 const mapStateToProps = (state) => {
   return {
     posts: Object.values(state.posts),
-    // currentUserId: state.auth.userId,
-    // isSignedIn: state.auth.isSignedIn,
   };
 };
 

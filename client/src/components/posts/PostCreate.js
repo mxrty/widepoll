@@ -41,7 +41,12 @@ class PostCreate extends React.Component {
                   autoComplete="off"
                 />
                 {errors.title && touched.title ? (
-                  <Alert message={errors.title} type="error" showIcon />
+                  <Alert
+                    message={errors.title}
+                    type="error"
+                    showIcon
+                    data-testid="titleError"
+                  />
                 ) : null}
                 <label>Post body:</label>
                 <Field

@@ -2,7 +2,7 @@ import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import userEvent from "@testing-library/user-event";
 
-import { render, screen } from "./testUtils";
+import { render, screen, setupMatchMedia } from "./testUtils";
 import UserProfile from "../components/accounts/UserProfile";
 
 const match = {
@@ -46,19 +46,7 @@ const mockRepresentativeUser = {
 };
 
 beforeEach(() => {
-  Object.defineProperty(window, "matchMedia", {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(), // Deprecated
-      removeListener: jest.fn(), // Deprecated
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setupMatchMedia();
 });
 
 test("UserProfile component renders correctly when user is not found", () => {
@@ -78,8 +66,6 @@ test("UserProfile component renders correctly when user is not a representative"
     },
   });
 
-  screen.debug();
-
   // Check conditional rendering works when component has no user
   expect(screen.queryByTestId("default")).toBeNull();
 });
@@ -93,8 +79,6 @@ test("UserProfile component renders correctly when user is a representative, cur
       },
     },
   });
-
-  screen.debug();
 
   // Check conditional rendering works when component has no user
   expect(screen.queryByTestId("default")).toBeNull();

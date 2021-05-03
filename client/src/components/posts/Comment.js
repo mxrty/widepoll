@@ -88,27 +88,27 @@ const MyComment = (props) => {
     </Space>,
   ];
 
-  const interpolateColours = (colour1, colour2, ratio) => {
-    const toHex = (colour) => {
-      const colourString = colour.toString(16);
-      return colourString.length === 1 ? `0${colourString}` : colourString;
-    };
+  // const interpolateColours = (colour1, colour2, ratio) => {
+  //   const toHex = (colour) => {
+  //     const colourString = colour.toString(16);
+  //     return colourString.length === 1 ? `0${colourString}` : colourString;
+  //   };
 
-    let r = Math.ceil(
-      parseInt(colour2.substring(0, 2), 16) * ratio +
-        parseInt(colour1.substring(0, 2), 16) * (1 - ratio)
-    );
-    let g = Math.ceil(
-      parseInt(colour2.substring(2, 4), 16) * ratio +
-        parseInt(colour1.substring(2, 4), 16) * (1 - ratio)
-    );
-    let b = Math.ceil(
-      parseInt(colour2.substring(4, 6), 16) * ratio +
-        parseInt(colour1.substring(4, 6), 16) * (1 - ratio)
-    );
+  //   let r = Math.ceil(
+  //     parseInt(colour2.substring(0, 2), 16) * ratio +
+  //       parseInt(colour1.substring(0, 2), 16) * (1 - ratio)
+  //   );
+  //   let g = Math.ceil(
+  //     parseInt(colour2.substring(2, 4), 16) * ratio +
+  //       parseInt(colour1.substring(2, 4), 16) * (1 - ratio)
+  //   );
+  //   let b = Math.ceil(
+  //     parseInt(colour2.substring(4, 6), 16) * ratio +
+  //       parseInt(colour1.substring(4, 6), 16) * (1 - ratio)
+  //   );
 
-    return toHex(r) + toHex(g) + toHex(b);
-  };
+  //   return toHex(r) + toHex(g) + toHex(b);
+  // };
 
   const stackSentiments = (sentiments) => {
     const stack = props.comment.comment_body.split("").map((char) => {
@@ -272,6 +272,7 @@ const mapStateToProps = (state, ownProps) => {
     }),
     sentiments:
       ownProps.sentimentView &&
+      state.sentiments[ownProps.comment.post_id] &&
       state.sentiments[ownProps.comment.post_id][ownProps.comment.comment_id]
         ? state.sentiments[ownProps.comment.post_id][
             ownProps.comment.comment_id

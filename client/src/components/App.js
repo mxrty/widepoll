@@ -61,7 +61,7 @@ const App = () => {
                 <Route path="/settings" exact component={Settings} />
 
                 <Route path="/polls/new" exact component={PollCreate} />
-                <Route path="/polls/:pollId" exact component={PollShow} />
+                <Route path="/polls/show/:pollId" exact component={PollShow} />
                 <Route
                   path="/polls/:pollId/results"
                   exact

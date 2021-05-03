@@ -34,7 +34,7 @@ const ProfileBio = ({ fetchUser, userId, user }) => {
       </Card>
     );
   } else {
-    return <Card>No user found with id {userId}</Card>;
+    return <Card data-testid="default">No user found with id {userId}</Card>;
   }
 };
 

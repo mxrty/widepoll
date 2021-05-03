@@ -43,7 +43,12 @@ const CommentCreate = (props) => {
                 autoComplete="off"
               />
               {errors.comment && touched.comment ? (
-                <Alert message={errors.comment} type="error" showIcon />
+                <Alert
+                  message={errors.comment}
+                  type="error"
+                  showIcon
+                  data-testid="commentError"
+                />
               ) : null}
               <Button type="primary" htmlType="submit" loading={isSubmitting}>
                 Submit

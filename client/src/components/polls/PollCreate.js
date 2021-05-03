@@ -44,7 +44,12 @@ const PollCreate = (props) => {
                   autoComplete="off"
                 />
                 {errors.title && touched.title ? (
-                  <Alert message={errors.title} type="error" showIcon />
+                  <Alert
+                    message={errors.title}
+                    type="error"
+                    showIcon
+                    data-testid="titleError"
+                  />
                 ) : null}
                 <label>Poll description:</label>
                 <Field
@@ -100,7 +105,12 @@ const PollCreate = (props) => {
                   )}
                 </FieldArray>
                 {errors.pollOptions && touched.pollOptions ? (
-                  <Alert message={errors.pollOptions} type="error" showIcon />
+                  <Alert
+                    message={errors.pollOptions}
+                    type="error"
+                    showIcon
+                    data-testid="pollOptionError"
+                  />
                 ) : null}
                 <br />
                 <Button type="primary" htmlType="submit" loading={isSubmitting}>

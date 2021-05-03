@@ -38,7 +38,12 @@ const SolutionCreate = (props) => {
                 autoComplete="off"
               />
               {errors.title && touched.title ? (
-                <Alert message={errors.title} type="error" showIcon />
+                <Alert
+                  message={errors.title}
+                  type="error"
+                  showIcon
+                  data-testid="titleError"
+                />
               ) : null}
               <label>Post body:</label>
               <Field
@@ -48,7 +53,12 @@ const SolutionCreate = (props) => {
                 autoComplete="off"
               />
               {errors.body && touched.body ? (
-                <Alert message={errors.body} type="error" showIcon />
+                <Alert
+                  message={errors.body}
+                  type="error"
+                  showIcon
+                  data-testid="bodyError"
+                />
               ) : null}
 
               <Button type="primary" htmlType="submit" loading={isSubmitting}>

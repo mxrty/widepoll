@@ -1,5 +1,6 @@
 import React from "react";
 import { Provider } from "react-redux";
+import { MemoryRouter } from "react-router-dom";
 import { render as rtlRender } from "@testing-library/react";
 import { createStore, applyMiddleware } from "redux";
 import reduxThunk from "redux-thunk";
@@ -21,12 +22,32 @@ function render(ui, { initialState, ...renderOptions } = {}) {
     applyMiddleware(reduxThunk)
   );
   function Wrapper({ children }) {
-    return <Provider store={store}>{children}</Provider>;
+    return (
+      <Provider store={store}>
+        <MemoryRouter>{children}</MemoryRouter>
+      </Provider>
+    );
   }
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
 }
 
+const setupMatchMedia = () => {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: jest.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // Deprecated
+      removeListener: jest.fn(), // Deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+};
+
 // re-export everything
 export * from "@testing-library/react";
 // override render method
-export { render };
+export { render, setupMatchMedia };

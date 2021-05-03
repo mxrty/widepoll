@@ -34,6 +34,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -58,5 +59,19 @@
     "@testing-library/user-event": "^12.8.3",
     "@types/chartjs-plugin-colorschemes": "^0.4.0"
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "jest": {
+    "collectCoverageFrom": [
+      "src/components/accounts/*.{js,jsx}",
+      "src/components/app/Home.{js,jsx}",
+      "src/components/app/SentimentEditor.{js,jsx}",
+      "src/components/domains/*.{js,jsx}",
+      "src/components/layout/*.{js,jsx}",
+      "src/components/polls/*.{js,jsx}",
+      "src/components/posts/*.{js,jsx}",
+      "src/components/solutions/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/*Container.jsx"
+    ]
+  }
 }

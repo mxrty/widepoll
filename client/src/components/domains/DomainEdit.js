@@ -77,12 +77,19 @@ class DomainEdit extends React.Component {
   };
 
   render() {
-    return this.renderForm();
+    if (this.props.isSignedIn) {
+      return this.renderForm();
+    } else {
+      return <div>You must be signed in to edit a domain</div>;
+    }
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { domain: state.domains[ownProps.match.params.domain] };
+  return {
+    domain: state.domains[ownProps.match.params.domain],
+    isSignedIn: state.auth.isSignedIn,
+  };
 };
 
 export default connect(mapStateToProps, {

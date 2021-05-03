@@ -39,7 +39,12 @@ const DomainCreate = (props) => {
                   autoComplete="off"
                 />
                 {errors.domainName && touched.domainName ? (
-                  <Alert message={errors.domainName} type="error" showIcon />
+                  <Alert
+                    message={errors.domainName}
+                    type="error"
+                    showIcon
+                    data-testid="domainNameError"
+                  />
                 ) : null}
                 <label>Domain description:</label>
                 <Field

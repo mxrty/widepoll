@@ -18,7 +18,7 @@ export const createPoll = (formValues) => async (dispatch, getState) => {
   );
 
   dispatch({ type: CREATE_POLL, payload: response.data });
-  history.push(`/polls/${response.data.poll_id}`);
+  history.push(`/polls/show/${response.data.poll_id}`);
 };
 
 export const fetchPoll = (id) => async (dispatch) => {
