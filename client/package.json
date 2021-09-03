@@ -11,7 +11,7 @@
     "axios": "^0.21.1",
     "chart.js": "^2.9.4",
     "formik": "^2.2.6",
-    "immer": "^8.0.1",
+    "immer": "^9.0.6",
     "lodash": "^4.17.20",
     "react": "^17.0.1",
     "react-beautiful-dnd": "^13.1.0",
